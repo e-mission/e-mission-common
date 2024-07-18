@@ -3,9 +3,12 @@ Functions for calculating the estimated footprint of a trip, both in terms of
 energy usage (kwh) and carbon emissions (kg_co2).
 """
 
-# https://www.epa.gov/energy/greenhouse-gases-equivalencies-calculator-calculations-and-references
-KG_CO2_PER_GALLON_GASOLINE = 8.89
-KG_CO2_PER_GALLON_DIESEL = 10.18
+#GREET2023 Co2(x/ C in VOC & CO) results 
+#(converted g/mmBTU values to kg/Gal fuel using constants and LHVs in Fuel_Specs
+#from "gasoline vehicle" (ensured alignment with HEV and PHEV in CS mode)
+KG_CO2_PER_GALLON_GASOLINE = 10.15
+#from "CIDI Vehicle: Conventional and LS Diesel"
+KG_CO2_PER_GALLON_DIESEL = 11.79
 
 DIESEL_GGE = 1.136 # from energy.gov
 KWH_PER_GALLON_GASOLINE = 33.7 # from the EPA, used as the basis for MPGe
