@@ -108,9 +108,7 @@ async def get_uace_by_coords(coords: list[float, float], year: int) -> str | Non
         Logger.log_error(f"Failed to geocode {coords} in year {year}")
         return None
 
-    # __pragma__('jsiter')
-    for g in data['result']['geographies']:
-        # __pragma__('nojsiter')
+    for g in data['result']['geographies'].keys():
         for entry in data['result']['geographies'][g]:
             if 'UA' in entry:
                 return entry['UA']

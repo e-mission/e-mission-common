@@ -42,7 +42,7 @@ def flatten_db_entry(entry: dict) -> dict:
         '_id': entry['_id'],
         'user_id': entry['user_id'],
         'key': entry['metadata']['key'],
-        'origin_key': entry['metadata']['origin_key'] if 'origin_key' in entry['metadata'] else None
+        'origin_key': entry['metadata'].get('origin_key', None)
     }
     # __pragma__('noskip')
 

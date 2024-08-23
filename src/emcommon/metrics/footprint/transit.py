@@ -59,8 +59,8 @@ async def get_transit_intensities_for_uace(year: int, uace: str | None = None, m
         upt = entry['Unlinked Passenger Trips']
         total_upt += upt
         for fuel_type in fuel_types:
-            fuel_pct = entry[f"{fuel_type} (%)"] if f"{fuel_type} (%)" in entry else 0
-            wh_per_pkm = entry[f"{fuel_type} (Wh/pkm)"] if f"{fuel_type} (Wh/pkm)" in entry else 0
+            fuel_pct = entry.get(f"{fuel_type} (%)", 0)
+            wh_per_pkm = entry.get(f"{fuel_type} (Wh/pkm)", 0)
             if fuel_pct and wh_per_pkm:
                 agency_mode_fueltypes.append({
                     "fuel_type": fuel_type,

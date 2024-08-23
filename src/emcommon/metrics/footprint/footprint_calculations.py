@@ -14,10 +14,7 @@ def merge_metadatas(meta_a, meta_b):
     """
     Merge two metadata dictionaries, where child lists/arrays are concatenated and booleans are ORed.
     """
-    # __pragma__('jsiter')
-    for key in meta_b:
-        # __pragma__('nojsiter')
-        value = meta_b[key]
+    for key, value in meta_b.items():
         if key not in meta_a:
             meta_a[key] = value
         elif hasattr(meta_a[key], 'concat'):
@@ -46,10 +43,7 @@ async def calc_footprint_for_trip(trip, mode_label_option):
     kwh_total = 0
     kg_co2_total = 0
 
-    # __pragma__('jsiter')
-    for fuel_type in mode_footprint:
-        # __pragma__('nojsiter')
-        fuel_type_footprint = mode_footprint[fuel_type]
+    for fuel_type, fuel_type_footprint in mode_footprint.items():
         # distance in m converted to km; km * Wh/km results in Wh; convert to kWh
         kwh = (distance / 1000) * fuel_type_footprint['wh_per_km'] / 1000
         if fuel_type in emcmfu.FUELS_KG_CO2_PER_KWH:
@@ -71,7 +65,7 @@ async def calc_footprint_for_trip(trip, mode_label_option):
     # passenger-km and 'passengers' is not defined.
     # Other modes (car, carpool) have a flexible number of passengers. The footprints are
     # per vehicle-km. Dividing by 'passengers' gives the footprint per passenger-km.
-    passengers = mode_label_option['passengers'] if 'passengers' in mode_label_option else 1
+    passengers = mode_label_option.get('passengers', 1)
     footprint = {
         'kwh': kwh_total / passengers,
         'kg_co2': kg_co2_total / passengers,

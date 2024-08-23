@@ -9,14 +9,12 @@ import emcommon.bluetooth.ble_matching as ble_matching
 import emcommon.metrics.footprint.footprint_calculations as footprint_calculations
 import emcommon.diary.base_modes as base_modes
 
-def dict_to_js_obj(py_dict):
-    """
-    Converts a Python dictionary to a JavaScript object
-    """
-    js_obj = {} # __: jsiter
-    for key, value in py_dict.items():
-        if isinstance(value, dict):
-            js_obj[key] = dict_to_js_obj(value)
-        else:
-            js_obj[key] = value
-    return js_obj
+
+# Add methods from Transcrypt's 'dict' to the JS Object prototype,
+# allowing emcommon to use JS objects the same way it uses Python dicts
+'''?
+d = dict()
+for p in Object.getOwnPropertyNames(d.__proto__ if d.__proto__.__class__ else d):
+    d['value'] = d[p]
+    __setproperty__(Object.prototype, p, d)
+?'''
