@@ -23,5 +23,5 @@ Issues = "https://github.com/e-mission/e-mission-docs/issues"
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
 
-[tool.setuptools.package_data]
+[tool.setuptools.package-data]
 "*" = ["src/emcommon/resources/*"]
