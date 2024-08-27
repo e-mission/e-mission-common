@@ -47,7 +47,7 @@ E_BIKING_METS = {
 # TODO get these from GREET or somewhere trustworthy
 GAS_CAR_MPG = 24
 ECAR_MPGE = 100
-PHEV_UF = 0.4  # UF = utility factor
+PHEV_UF = 0.37  # https://theicct.org/wp-content/uploads/2021/06/PHEV-FS-EN-sept2020-0.pdf
 PHEV_GAS_MPG = 40
 PHEV_ELEC_MPGE = 100
 E_BIKE_WH_PER_KM = 13.67
