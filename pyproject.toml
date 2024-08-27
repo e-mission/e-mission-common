@@ -1,6 +1,6 @@
 [project]
 name = "e-mission-common"
-version = "0.5.3"
+version = "0.6.0"
 authors = [
     {name = "Jack Greenlee", email = "jack.greenlee@nrel.gov"},
     {name = "K Shankari", email = "k.shankari@nrel.gov"},
@@ -22,3 +22,9 @@ Issues = "https://github.com/e-mission/e-mission-docs/issues"
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"emcommon" = ["**"]

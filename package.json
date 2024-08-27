@@ -1,9 +1,37 @@
 {
   "name": "e-mission-common",
   "type": "module",
-  "version": "0.5.3",
+  "version": "0.6.0",
   "description": "A common library to share code between projects in the e-mission-platform. Written in Python and exposed as both Python and JavaScript.",
   "main": "./emcommon_js/index.js",
+  "types": "./emcommon_js/dist/index.d.ts",
+  "jest": {
+    "testMatch": [
+      "**/test_*.js"
+    ],
+    "globals": { "window": {} },
+    "transform": {}
+  },
+  "prettier": {
+    "printWidth": 100,
+    "tabWidth": 2,
+    "singleQuote": true,
+    "trailingComma": "all",
+    "bracketSpacing": true,
+    "bracketSameLine": true,
+    "endOfLine": "lf",
+    "semi": true
+  },
+  "dependencies": {
+    "color": "^3.1.2"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.12",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
+    "mapshaper": "^0.6.99",
+    "typescript": "^5.5.4"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/JGreenlee/e-mission-common.git"

@@ -1,73 +1,57 @@
-from __future__ import annotations # __: skip
-import emcommon.logger as Logger
+from __future__ import annotations  # __: skip
+import emcommon.logger as Log
 from emcommon.survey.conditional_surveys import survey_prompted_for_trip
 
-def survey_answered_for_trip(composite_trip: dict, trip_labels_map: dict[str, any]) -> str | None:
-    """
-    :param composite_trip: composite trip
-    :return: the name of the survey that was answered for the trip, or None if no survey was answered
-    """
-    Logger.log_debug('called survey_answered_for_trip for trip %s' % composite_trip)
-    if 'user_input' in composite_trip \
-      and 'trip_user_input' in composite_trip['user_input']:
-        return composite_trip['user_input']['trip_user_input']['data']['name']
-    if trip_labels_map \
-      and composite_trip['_id']['$oid'] in trip_labels_map \
-      and 'SURVEY' in trip_labels_map[composite_trip['_id']['$oid']] \
-      and 'data' in trip_labels_map[composite_trip['_id']['$oid']]['SURVEY']:
-        return trip_labels_map[composite_trip['_id']['$oid']]['SURVEY']['data']['name']
-    return None
+
+# def get_surveys_summary(composite_trips: list, trip_labels_map: dict[str, any], app_config: dict) -> dict:
+#     """
+#     :param composite_trips: composite trips
+#     :return: a summary of the surveys answered for the given composite trips
+#     """
+#     surveys_summary = {}
+#     for trip in composite_trips:
+#         prompted_survey = survey_prompted_for_trip(trip, app_config)
+#         if not prompted_survey:
+#             pass
+#             # __pragma__('js', '{}', 'continue;')
+#         if prompted_survey not in surveys_summary:
+#             surveys_summary[prompted_survey] = {
+#                 'answered': 0,
+#                 'unanswered': 0,
+#                 'mismatched': 0,
+#             }
+#         answered_survey = survey_answered_for_trip(trip, trip_labels_map)
+#         if answered_survey == prompted_survey:
+#             surveys_summary[prompted_survey]['answered'] += 1
+#         elif answered_survey:
+#             Log.warn(f"Unexpected: trip {trip['_id']['$oid']} answered survey {answered_survey} but should have been prompted for {prompted_survey}")
+#             surveys_summary[prompted_survey]['mismatched'] += 1
+#         else:
+#             surveys_summary[prompted_survey]['unanswered'] += 1
+#     return surveys_summary
 
 
-def get_surveys_summary(composite_trips: list, trip_labels_map: dict[str, any], app_config: dict) -> dict:
-    """
-    :param composite_trips: composite trips
-    :return: a summary of the surveys answered for the given composite trips
-    """
-    surveys_summary = {}
-    for trip in composite_trips:
-        prompted_survey = survey_prompted_for_trip(trip, app_config)
-        if not prompted_survey:
-            pass
-            # __pragma__('js', '{}', 'continue;')
-        if prompted_survey not in surveys_summary:
-            surveys_summary[prompted_survey] = {
-                'answered': 0,
-                'unanswered': 0,
-                'mismatched': 0,
-            }
-        answered_survey = survey_answered_for_trip(trip, trip_labels_map)
-        if answered_survey == prompted_survey:
-            surveys_summary[prompted_survey]['answered'] += 1
-        elif answered_survey:
-            Logger.log_warn(f"Unexpected: trip {trip['_id']['$oid']} answered survey {answered_survey} but should have been prompted for {prompted_survey}")
-            surveys_summary[prompted_survey]['mismatched'] += 1
-        else:
-            surveys_summary[prompted_survey]['unanswered'] += 1
-    return surveys_summary
-
-
-def get_response_rate_rankings(composite_trips: list, trip_labels_map: dict[str, any], app_config: dict) -> dict:
-    """
-    :param composite_trips: a list of composite trips from multiple users
-    :return: a dict of user_id to response rate, sorted by highest response rate
-    """
-    # bin trips by user_id
-    user_trips = {}
-    for trip in composite_trips:
-        user_id = trip['user_id']
-        if user_id not in user_trips:
-            user_trips[user_id] = []
-        user_trips[user_id].append(trip)
-    # get response rates for each user
-    response_rates = {}
-    for user_id, trips in user_trips.items():
-        summary = get_surveys_summary(trips, trip_labels_map, app_config)
-        answered = sum([s['answered'] for s in summary.values()])
-        unanswered = sum([s['unanswered'] for s in summary.values()])
-        response_rates[user_id] = answered / (answered + unanswered)
-    # sort by highest response rate and return
-    return sorted(response_rates.items(), key=lambda x: x[1], reverse=True)
+# def get_response_rate_rankings(composite_trips: list, trip_labels_map: dict[str, any], app_config: dict) -> dict:
+#     """
+#     :param composite_trips: a list of composite trips from multiple users
+#     :return: a dict of user_id to response rate, sorted by highest response rate
+#     """
+#     # bin trips by user_id
+#     user_trips = {}
+#     for trip in composite_trips:
+#         user_id = trip['user_id']
+#         if user_id not in user_trips:
+#             user_trips[user_id] = []
+#         user_trips[user_id].append(trip)
+#     # get response rates for each user
+#     response_rates = {}
+#     for user_id, trips in user_trips.items():
+#         summary = get_surveys_summary(trips, trip_labels_map, app_config)
+#         answered = sum([s['answered'] for s in summary.values()])
+#         unanswered = sum([s['unanswered'] for s in summary.values()])
+#         response_rates[user_id] = answered / (answered + unanswered)
+#     # sort by highest response rate and return
+#     return sorted(response_rates.items(), key=lambda x: x[1], reverse=True)
 
 
 # def get_median_response_rates(composite_trips: list, trip_labels_map: dict[str, any], app_config: dict) -> dict:

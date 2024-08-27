@@ -1,6 +1,6 @@
-from __future__ import annotations # __: skip
+from __future__ import annotations  # __: skip
 # from util import memoize
-import emcommon.logger as Logger
+import emcommon.logger as Log
 import emcommon.util as util
 import emcommon.bluetooth.ble_matching as emcble
 import emcommon.survey.conditional_surveys as emcsc
@@ -9,6 +9,8 @@ app_config = None
 labels_map = None
 
 # @memoize
+
+
 def label_for_trip(composite_trip: dict, label_key: str) -> str:
     """
     :param composite_trip: composite trip
@@ -21,8 +23,8 @@ def label_for_trip(composite_trip: dict, label_key: str) -> str:
     if 'user_input' in composite_trip and label_key_confirm in composite_trip['user_input']:
         return composite_trip['user_input'][label_key_confirm]
     if labels_map and composite_trip['_id']['$oid'] in labels_map \
-        and label_key in labels_map[composite_trip['_id']['$oid']]:
-            return labels_map[composite_trip['_id']['$oid']][label_key]['data']['label']
+            and label_key in labels_map[composite_trip['_id']['$oid']]:
+        return labels_map[composite_trip['_id']['$oid']][label_key]['data']['label']
     return None
 
 
@@ -115,6 +117,7 @@ def get_summary_for_metric(metric: tuple[str, list[str]], confirmed_trips: list)
         days_summaries.append(summary_for_day)
     return days_summaries
 
+
 grouping_field_fns = {
     'mode_confirm': lambda trip: label_for_trip(trip, 'mode') or 'UNLABELED',
     'purpose_confirm': lambda trip: label_for_trip(trip, 'purpose') or 'UNLABELED',
@@ -123,6 +126,7 @@ grouping_field_fns = {
     # 'primary_inferred_mode', maybe add later
     'primary_ble_sensed_mode': lambda trip: emcble.primary_ble_sensed_mode_for_trip(trip) or 'UNKNOWN',
 }
+
 
 def metric_summary_for_trips(metric: tuple[str, list[str]], confirmed_trips: list):
     """
@@ -140,7 +144,8 @@ def metric_summary_for_trips(metric: tuple[str, list[str]], confirmed_trips: lis
         return groups
     for trip in confirmed_trips:
         if 'primary_ble_sensed_mode' not in trip:
-            trip['primary_ble_sensed_mode'] = emcble.primary_ble_sensed_mode_for_trip(trip) or 'UNKNOWN'
+            trip['primary_ble_sensed_mode'] = emcble.primary_ble_sensed_mode_for_trip(
+                trip) or 'UNKNOWN'
         for grouping_field in metric[1]:
             if grouping_field not in grouping_field_fns:
                 continue
