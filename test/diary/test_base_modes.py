@@ -68,21 +68,36 @@ def test_get_rich_mode_e_car():
                 }))
 
 
+fake_mode_colors = [
+    ['walk', '#0074b7'],
+    ['e-bike', '#008148'],
+    ['bike', '#008148'],
+    ['bikeshare', '#008148'],
+]
+
+
 @jest_test
 def test_dedupe_colors():
-    fake_mode_colors = [
-        ['walk', '#0074b7'],
-        ['e-bike', '#008148'],
-        ['bike', '#008148'],
-        ['bikeshare', '#008148'],
-    ]
-    deduped_colors = emcdb.dedupe_colors(fake_mode_colors)
-    print(deduped_colors)
+    deduped_colors = emcdb.dedupe_colors(fake_mode_colors, [0.4, 1.6])
 
     expected = {
         'bike': '#008148',
         'bikeshare': '#00ce73',
         'e-bike': '#00341d',
+        'walk': '#0074b7',
+    }
+    for mode in expected:
+        expectEqual(deduped_colors[mode].upper(), expected[mode].upper())
+
+
+@jest_test
+def test_dedupe_colors_lighten_only():
+    deduped_colors = emcdb.dedupe_colors(fake_mode_colors)
+
+    expected = {
+        'bike': '#00c26c',
+        'bikeshare': '#03ff90',
+        'e-bike': '#008148',
         'walk': '#0074b7',
     }
     for mode in expected:
