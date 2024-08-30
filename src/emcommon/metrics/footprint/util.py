@@ -25,10 +25,10 @@ KWH_PER_GAL_OTHER = KWH_PER_GGE * 1.00  # TODO can we handle the default case be
 # from CHEER paper 2024
 # LPG is missing! 300 is a placeholder
 FUELS_KG_CO2_PER_MWH = {
-    'gasoline': 314.183,
+    'gasoline': 324.183,
     'diesel': 325.073,
     'jet_fuel': 304.354,
-    'lpg': 300,  # TODO need LPG carbon intensity
+    'lpg': 279.192,
     'cng': 271.024,
     'hydrogen': 332.852,
 }
