@@ -23,7 +23,6 @@ KWH_PER_KG_HYDROGEN = KWH_PER_GGE * 1.00
 KWH_PER_GAL_OTHER = KWH_PER_GGE * 1.00  # TODO can we handle the default case better?
 
 # from CHEER paper 2024
-# LPG is missing! 300 is a placeholder
 FUELS_KG_CO2_PER_MWH = {
     'gasoline': 324.183,
     'diesel': 325.073,
