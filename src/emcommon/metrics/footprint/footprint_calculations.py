@@ -34,8 +34,8 @@ async def calc_footprint_for_trip(trip, mode_label_option):
     """
     Calculate the estimated footprint of a trip, which includes 'kwh' and 'kg_co2' fields.
     """
-    Log.debug('Getting footprint for trip: ' + str(trip) +
-              ', with mode option: ' + str(mode_label_option))
+    # Log.debug('Getting footprint for trip: ' + str(trip) +
+    #           ', with mode option: ' + str(mode_label_option))
     metadata = {}
     distance = trip['distance']
     rich_mode = emcdb.get_rich_mode(mode_label_option)
@@ -58,10 +58,10 @@ async def calc_footprint_for_trip(trip, mode_label_option):
             kwh += fuel_type_footprint['wh_per_trip'] / 1000
 
         if fuel_type in emcmfu.FUELS_KG_CO2_PER_KWH:
-            Log.debug('Using default carbon intensity for fuel type: ' + fuel_type)
+            # Log.debug('Using default carbon intensity for fuel type: ' + fuel_type)
             kg_co2 = kwh * emcmfu.FUELS_KG_CO2_PER_KWH[fuel_type]
         elif fuel_type == 'electric':
-            Log.debug('Using eGRID carbon intensity for electric')
+            # Log.debug('Using eGRID carbon intensity for electric')
             (kg_per_mwh, egrid_metadata) = await emcmfe.get_egrid_intensity_for_trip(trip)
             merge_metadatas(metadata, egrid_metadata)
             kg_co2 = kwh * kg_per_mwh / 1000

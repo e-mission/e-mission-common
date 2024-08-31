@@ -97,7 +97,7 @@ async def get_egrid_region(coords: list[float, float], year: int) -> str | None:
     region_feature = get_feature_containing_point(coords, geojson)
     if region_feature is not None:
         return region_feature['properties']['name']
-    # __pragma__('noskip')
+    Log.warn(f"An eGRID region was not found for coords {coords} in year {year}.")
     return None
 
 
@@ -126,8 +126,7 @@ async def get_uace_by_coords(coords: list[float, float], year: int) -> str | Non
         for entry in data['result']['geographies'][g]:
             if 'UA' in entry:
                 return entry['UA']
-    Log.error(
-        f"Geocoding response did not contain UA for coords {coords} in year {year}: {data}")
+    Log.warn(f"Urban Area not in geocoding response for coords {coords} in year {year}: {url}")
     return None
 
 

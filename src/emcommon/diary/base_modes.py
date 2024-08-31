@@ -235,7 +235,7 @@ def get_rich_mode(label_option):
     e.g. get_rich_mode({ "base_mode": "WALKING", "color": "#000000" })
     -> { "icon": "walk", "color": "#000000", "met": WALKING_METS, "footprint": {} }
     """
-    Log.debug(f"Getting rich mode for label_option: {label_option}")
+    # Log.debug(f"Getting rich mode for label_option: {label_option}")
     rich_mode = {k: v for k, v in dict(label_option).items()}
     base_props = ['icon', 'color', 'met', 'footprint']
     for prop in base_props:
@@ -251,7 +251,7 @@ def get_rich_mode(label_option):
                     base_mode = get_base_mode_by_key(label_option[bm])
                     if prop in base_mode:
                         rich_mode[prop] = base_mode[prop]
-    Log.debug(f"Rich mode: {rich_mode}")
+    # Log.debug(f"Rich mode: {rich_mode}")
     return rich_mode
 
 
