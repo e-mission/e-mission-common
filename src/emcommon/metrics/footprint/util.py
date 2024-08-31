@@ -71,18 +71,26 @@ def get_feature_containing_point(pt, geojson):
     return None
 
 
+latest_egrid_year = None
+latest_ntd_year = None
+
+
 async def get_egrid_region(coords: list[float, float], year: int) -> str | None:
     """
     Get the eGRID region at the given coordinates in the year.
     """
+    global latest_egrid_year
     if year < 2018:
         Log.warn(f"eGRID data not available for {year}. Using 2018.")
         return await get_egrid_region(coords, 2018)
+    if latest_egrid_year is not None and year > latest_egrid_year:
+        return await get_egrid_region(coords, latest_egrid_year)
     try:
         geojson = await read_json_resource(f"egrid{year}_subregions_5pct.json")
     except:
         if year > 2018:
             Log.warn(f"eGRID data not available for {year}. Trying {year-1}.")
+            latest_egrid_year = year-1
             return await get_egrid_region(coords, year-1)
         Log.error(f"eGRID lookup failed for {year}.")
         return None
@@ -127,14 +135,23 @@ async def get_intensities_data(year: int, dataset: str) -> dict:
     """
     Get the 'intensities' data for the given year from the specified dataset.
     """
+    global latest_egrid_year, latest_ntd_year
     if year < 2018:
         Log.warn(f"{dataset} data not available for {year}. Using 2018.")
         return await get_intensities_data(2018, dataset)
+    if dataset == 'egrid' and latest_egrid_year is not None and year > latest_egrid_year:
+        return await get_intensities_data(latest_egrid_year, dataset)
+    if dataset == 'ntd' and latest_ntd_year is not None and year > latest_ntd_year:
+        return await get_intensities_data(latest_ntd_year, dataset)
     try:
         return await read_json_resource(f"{dataset}{year}_intensities.json")
     except:
         if year > 2018:
             Log.warn(f"{dataset} data not available for {year}. Trying {year-1}.")
+            if dataset == 'egrid':
+                latest_egrid_year = year-1
+            elif dataset == 'ntd':
+                latest_ntd_year = year-1
             return await get_intensities_data(year-1, dataset)
         Log.error(f"eGRID lookup failed for {year}.")
         return None

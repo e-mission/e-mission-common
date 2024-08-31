@@ -47,15 +47,22 @@ def flatten_db_entry(entry: dict) -> dict:
     # __pragma__('noskip')
 
 
+resources = {}
+
+
 async def read_json_resource(filename: str) -> dict:
     """
     Read a JSON file from '/resources' and return the contents as a dict
     """
+    global resources
+    if filename in resources:
+        return resources[filename]
 
     '''?
     __pragma__('js', '{}', """
     const r = await import("../src/emcommon/resources/" + filename);
-    return r.default;
+    resources[filename] = r.default;
+    return resources[filename];
     """)
     ?'''
 
@@ -65,7 +72,8 @@ async def read_json_resource(filename: str) -> dict:
     currdir = os.path.dirname(__file__)
     filepath = os.path.join(currdir, f"resources/{filename}")
     with open(filepath) as f:
-        return json.load(f)
+        resources[filename] = json.load(f)
+        return resources[filename]
     # __pragma__('noskip')
 
 
