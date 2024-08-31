@@ -242,8 +242,12 @@ def get_rich_mode(label_option):
         if prop in label_option:
             rich_mode[prop] = label_option[prop]
         elif f"{prop}_equivalent" in label_option:
-            import emcommon.diary.base_modes as emcdb
-            rich_mode[prop] = emcdb.get_base_mode_by_key(label_option[f"{prop}_equivalent"])[prop]
+            eq_base_mode = get_base_mode_by_key(label_option[f"{prop}_equivalent"])
+            if prop in eq_base_mode:
+                rich_mode[prop] = eq_base_mode[prop]
+            else:
+                Log.warn(f"Opt {label_option['value']} had {prop}_equivalent="
+                         f"{label_option[f'{prop}_equivalent']} but {prop} not in {eq_base_mode}")
         else:
             # backwards compat for camelCase; eventually want to standardize to snake_case
             for bm in ['base_mode', 'baseMode']:
