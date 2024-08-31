@@ -15,19 +15,15 @@ def weighted_mean(values, weights):
     return sum([v * w / w_sum for v, w in zip(values, weights)])
 
 
-async def get_transit_intensities_for_trip(trip, modes: list[str] | None):
-    Log.debug(f"Getting mode footprint for transit modes {modes} in trip: {trip}")
-    year = util.year_of_trip(trip)
-    coords = trip["start_loc"]["coordinates"]
-    return await get_transit_intensities_for_coords(year, coords, modes)
-
-
-async def get_transit_intensities_for_coords(year: int, coords: list[float, float], modes: list[str] | None, metadata: dict = {}):
-    # Log.debug(
-    #     f"Getting mode footprint for transit modes {modes} in year {year} and coords {coords}")
-    metadata.update({'requested_coords': coords})
-    uace_code = await util.get_uace_by_coords(coords, year)
-    return await get_transit_intensities_for_uace(year, uace_code, modes, metadata)
+async def get_transit_intensities(year: int, coords: list[float, float] = None,
+                                  uace: str | None = None, modes: list[str] | None = None,
+                                  metadata: dict = {}):
+    # Log.debug(f"Getting mode footprint in year {year}, coords {coords}, "
+    #           f"UACE {uace}, and modes {modes}")
+    if uace is None:
+        metadata.update({'requested_coords': coords})
+        uace = await util.get_uace_by_coords(coords, year)
+    return await get_transit_intensities_for_uace(year, uace, modes, metadata)
 
 
 async def get_transit_intensities_for_uace(year: int, uace: str | None = None, modes: list[str] | None = None, metadata: dict = {}):

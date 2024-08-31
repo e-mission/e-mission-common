@@ -226,6 +226,22 @@ def get_base_mode_by_key(motionName):
     return BASE_MODES.get(pop, BASE_MODES["UNKNOWN"])
 
 
+def get_rich_mode_for_value(value: str, label_options: dict):
+    """
+    Get the rich mode for a trip, based on the trip's mode_confirm. If unlabeled, the
+    base mode of the primary sensed mode is used.
+    """
+    if 'MODE' not in label_options:
+        Log.error('No MODE in label_options')
+        return None
+    for opt in label_options['MODE']:
+        if opt.get('value') == value:
+            return get_rich_mode(opt)
+
+    # if it wasn't a mode in the label_options, try getting a base mode
+    return get_base_mode_by_key(value)
+
+
 def get_rich_mode(label_option):
     """
     A "label_option" is one of the mode options given by a deployer in the label_options config

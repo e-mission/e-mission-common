@@ -5,6 +5,7 @@ energy usage (kwh) and carbon emissions (kg_co2).
 
 import emcommon.logger as Log
 import emcommon.diary.base_modes as emcdb
+import emcommon.diary.util as emcdu
 import emcommon.metrics.footprint.egrid as emcmfe
 import emcommon.metrics.footprint.transit as emcmft
 import emcommon.metrics.footprint.util as emcmfu
@@ -21,34 +22,61 @@ def merge_metadatas(meta_a, meta_b):
         if key not in meta_a:
             meta_a[key] = value
         elif hasattr(meta_a[key], 'concat'):
-            meta_a[key] = meta_a[key].concat(value)
+            meta_a[key] = meta_a[key].concat([v for v in value if v not in meta_a[key]])
         elif isinstance(value, list):
-            meta_a[key] = meta_a[key] + value
+            meta_a[key] = meta_a[key] + [v for v in value if v not in meta_a[key]]
         elif isinstance(value, bool):
             meta_a[key] = meta_a[key] or value
         else:
             meta_a[key] = value
 
 
-async def calc_footprint_for_trip(trip, mode_label_option):
+async def calc_footprint_for_trip(trip, label_options, mode_value=None, labels_map=None):
     """
     Calculate the estimated footprint of a trip, which includes 'kwh' and 'kg_co2' fields.
     """
-    # Log.debug('Getting footprint for trip: ' + str(trip) +
-    #           ', with mode option: ' + str(mode_label_option))
-    metadata = {}
-    distance = trip['distance']
-    rich_mode = emcdb.get_rich_mode(mode_label_option)
-    mode_footprint = dict(rich_mode['footprint'])
+    # Log.debug(f"Getting footprint for trip: {str(trip)}")
+    mode_value = mode_value or emcdu.label_for_trip(trip, 'mode', labels_map)
+    rich_mode = mode_value and emcdb.get_rich_mode_for_value(mode_value, label_options)
+    is_uncertain = False
+    if rich_mode is None or 'footprint' not in rich_mode:
+        # Log.warn(f"Mode {str(rich_mode)} does not have a footprint."
+        #          "Using worst rich mode to determine uncertainty.")
+        is_uncertain = True
+        rich_mode = emcmfu.find_worst_rich_mode(label_options)
+
+    (footprint, metadata) = await calc_footprint(
+        mode_footprint=rich_mode['footprint'],
+        distance=trip['distance'],
+        year=emcmfu.year_of_trip(trip),
+        passengers=rich_mode.get('passengers', 1),
+        coords=trip['start_loc']['coordinates'],
+        uace=trip.get('uace_region'),
+        egrid_region=trip.get('egrid_region'),
+        metadata={'trip_id': trip['_id']}
+    )
+    # If is_uncertain, the kwh and kg_co2 values represent the upper bound (worst-case scenario)
+    # Mark them as them uncertain, then set the main values to 0 to represent the lower bound.
+    if is_uncertain:
+        footprint['kwh_uncertain'] = footprint['kwh']
+        footprint['kg_co2_uncertain'] = footprint['kg_co2']
+        footprint['kwh'] = 0
+        footprint['kg_co2'] = 0
+    return (footprint, metadata)
+
+
+async def calc_footprint(mode_footprint, distance, year, coords, uace=None,
+                         egrid_region=None, passengers=1, metadata={}):
+    mode_footprint = dict(mode_footprint)
     if 'transit' in mode_footprint:
-        (mode_footprint, transit_metadata) = await emcmft.get_transit_intensities_for_trip(trip, mode_footprint['transit'])
+        (mode_footprint, transit_metadata) = await emcmft.get_transit_intensities(
+            year, coords, uace, mode_footprint['transit'], metadata
+        )
         merge_metadatas(metadata, transit_metadata)
     kwh_total = 0
     kg_co2_total = 0
 
-    # __pragma__('jsiter')
-    for fuel_type in mode_footprint:
-        # __pragma__('nojsiter')
+    for fuel_type in mode_footprint.keys():
         fuel_type_footprint = mode_footprint[fuel_type]
         kwh = 0
         if 'wh_per_km' in fuel_type_footprint:
@@ -62,10 +90,12 @@ async def calc_footprint_for_trip(trip, mode_label_option):
             kg_co2 = kwh * emcmfu.FUELS_KG_CO2_PER_KWH[fuel_type]
         elif fuel_type == 'electric':
             # Log.debug('Using eGRID carbon intensity for electric')
-            (kg_per_mwh, egrid_metadata) = await emcmfe.get_egrid_intensity_for_trip(trip)
+            (kg_per_mwh, egrid_metadata) = await emcmfe.get_egrid_intensity(
+                year, coords, egrid_region, metadata
+            )
             merge_metadatas(metadata, egrid_metadata)
             kg_co2 = kwh * kg_per_mwh / 1000
-        else:
+        elif fuel_type != 'overall':
             Log.warn('Unknown fuel type: ' + fuel_type)
             continue
 
@@ -78,7 +108,6 @@ async def calc_footprint_for_trip(trip, mode_label_option):
     # passenger-km and 'passengers' is not defined.
     # Other modes (car, carpool) have a flexible number of passengers. The footprints are
     # per vehicle-km. Dividing by 'passengers' gives the footprint per passenger-km.
-    passengers = mode_label_option['passengers'] if 'passengers' in mode_label_option else 1
     footprint = {
         'kwh': kwh_total / passengers,
         'kg_co2': kg_co2_total / passengers,
