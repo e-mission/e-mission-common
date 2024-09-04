@@ -6,4 +6,5 @@ dependencies:
 - pytest-asyncio
 - requests
 - pip:
-  - Transcrypt==3.9.3
+  # uses my fork until Transcrypt has a release w/ fix for https://github.com/TranscryptOrg/Transcrypt/issues/881
+  - git+https://github.com/JGreenlee/Transcrypt@dont-redeclare-arguments
