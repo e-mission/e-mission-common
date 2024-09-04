@@ -2,5 +2,7 @@
 __pycache__/
 e_mission_common.egg-info/
 node_modules/
+package-lock.json
 setup/
+miniconda.sh
 test_js*
