@@ -4,55 +4,35 @@ import emcommon.logger as Log
 import emcommon.util as util
 import emcommon.bluetooth.ble_matching as emcble
 import emcommon.survey.conditional_surveys as emcsc
+import emcommon.metrics.footprint.footprint_calculations as emcmff
+import emcommon.metrics.footprint.util as emcfu
+import emcommon.diary.base_modes as emcdb
+import emcommon.diary.util as emcdu
 
 app_config = None
 labels_map = None
+label_options = None
 
 # @memoize
 
 
-def label_for_trip(composite_trip: dict, label_key: str) -> str:
-    """
-    :param composite_trip: composite trip
-    :param label_key: which type of label to get ('mode', 'purpose', or 'replaced_mode')
-    :return: the label for the trip, derived from the trip's user_input if available, or the labels_map if available, or 'unlabeled' otherwise
-    """
-    global labels_map
-    label_key = label_key.upper()
-    label_key_confirm = label_key.lower() + '_confirm'
-    if 'user_input' in composite_trip and label_key_confirm in composite_trip['user_input']:
-        return composite_trip['user_input'][label_key_confirm]
-    if labels_map and composite_trip['_id']['$oid'] in labels_map \
-            and label_key in labels_map[composite_trip['_id']['$oid']]:
-        return labels_map[composite_trip['_id']['$oid']][label_key]['data']['label']
-    return None
-
-
-def survey_answered_for_trip(composite_trip: dict) -> str | None:
-    """
-    :param composite_trip: composite trip
-    :return: the name of the survey that was answered for the trip, or None if no survey was answered
-    """
-    global labels_map
-    if 'user_input' in composite_trip and 'trip_user_input' in composite_trip['user_input']:
-        return composite_trip['user_input']['trip_user_input']['data']['name']
-    if labels_map and composite_trip['_id']['$oid'] in labels_map:
-        survey = dict(labels_map[composite_trip['_id']['$oid']]).values()[0]
-        return survey['data']['name']
-    return None
-
-
-# @memoize
-def generate_summaries(metric_list: dict[str, list[str]], trips: list, _app_config, _labels_map: dict[str, any] = None):
+async def generate_summaries(
+    metric_list: dict[str, list[str]],
+    trips: list,
+    _app_config=None,
+    _labels_map: dict[str, any] = None,
+    _label_options: dict[str, list[dict]] = None,
+) -> dict[str, list[dict[str, any]]]:
     """
     :param metric_list: dict of metric names to lists of grouping fields, e.g. { 'distance': ['mode_confirm', 'purpose_confirm'] }
     :param trips: list of trips, which may be either confirmed_trips or composite_trips
     :param _app_config: app_config, or partial app_config with 'survey_info' present
     :param _labels_map: map of trip_ids to unprocessed user input labels
     """
-    global app_config, labels_map
+    global app_config, labels_map, label_options
     app_config = _app_config
     labels_map = _labels_map
+    label_options = _label_options
     # flatten all the incoming trips (if not already flat)
     trips_flat = [
         util.flatten_db_entry(trip) if 'data' in trip else trip
@@ -70,11 +50,14 @@ def generate_summaries(metric_list: dict[str, list[str]], trips: list, _app_conf
     confirmed_trips.sort(key=lambda trip: trip['start_ts'])
 
     metric_list = dict(metric_list)
-    return {metric[0]: get_summary_for_metric(metric, confirmed_trips) for metric in metric_list.items()}
+    summaries = {}
+    for metric in metric_list.items():
+        summaries[metric[0]] = await get_summary_for_metric(metric, confirmed_trips)
+    return summaries
 
 
-def value_of_metric_for_trip(metric_name: str, grouping_field: str, trip: dict):
-    global app_config
+async def value_of_metric_for_trip(metric_name: str, grouping_field: str, grouping_val: str, trip: dict):
+    global app_config, label_options, labels_map
     if metric_name == 'distance':
         return trip['distance']
     elif metric_name == 'count':
@@ -82,16 +65,43 @@ def value_of_metric_for_trip(metric_name: str, grouping_field: str, trip: dict):
     elif metric_name == 'duration':
         return trip['duration']
     elif metric_name == 'response_count':
-        if grouping_field.endswith('_confirm'):
-            return 'responded' if label_for_trip(trip, grouping_field[:-8]) else 'not_responded'
-        elif grouping_field == 'survey':
+        if grouping_field == 'survey':
             prompted_survey = emcsc.survey_prompted_for_trip(trip, app_config)
-            answered_survey = survey_answered_for_trip(trip)
+            answered_survey = emcdu.survey_answered_for_trip(trip, labels_map)
             return 'responded' if answered_survey == prompted_survey else 'not_responded'
+        else:
+            if grouping_val == 'UNKNOWN' or grouping_val == 'UNLABELED':
+                return 'not_responded'
+            return 'responded'
+    elif metric_name == 'footprint':
+        (footprint, metadata) = await emcmff.calc_footprint_for_trip(trip, label_options, grouping_val, labels_map)
+        footprint.update({'metadata': metadata})
+        return footprint
     return None
 
 
-def get_summary_for_metric(metric: tuple[str, list[str]], confirmed_trips: list):
+def acc_value_of_metric(metric_name: str, acc, new_val):
+    if metric_name == 'distance' or metric_name == 'duration' or metric_name == 'count':
+        acc = acc or 0
+        return acc + new_val
+    elif metric_name == 'response_count':
+        acc = acc or {}
+        if new_val not in acc:
+            acc[new_val] = 0
+        acc[new_val] += 1
+        return acc
+    elif metric_name == 'footprint':
+        acc = acc or {'metadata': {}}
+        new_val = dict(new_val)
+        for key in new_val.keys():
+            if key == 'metadata':
+                emcmff.merge_metadatas(acc['metadata'], new_val[key])
+            else:
+                acc[key] = acc.get(key, 0) + new_val[key]
+        return acc
+
+
+async def get_summary_for_metric(metric: tuple[str, list[str]], confirmed_trips: list):
     """
     :param metric: tuple of metric name and list of grouping fields
     :param confirmed_trips: list of confirmed trips
@@ -113,22 +123,22 @@ def get_summary_for_metric(metric: tuple[str, list[str]], confirmed_trips: list)
             'date': date,
             'nUsers': len({o['user_id']: 1 for o in trips}),
         }
-        summary_for_day.update(metric_summary_for_trips(metric, trips))
+        summary_for_day.update(await metric_summary_for_trips(metric, trips))
         days_summaries.append(summary_for_day)
     return days_summaries
 
 
 grouping_field_fns = {
-    'mode_confirm': lambda trip: label_for_trip(trip, 'mode') or 'UNLABELED',
-    'purpose_confirm': lambda trip: label_for_trip(trip, 'purpose') or 'UNLABELED',
-    'replaced_mode_confirm': lambda trip: label_for_trip(trip, 'replaced_mode') or 'UNLABELED',
+    'mode_confirm': lambda trip: emcdu.label_for_trip(trip, 'mode', labels_map) or 'UNLABELED',
+    'purpose_confirm': lambda trip: emcdu.label_for_trip(trip, 'purpose', labels_map) or 'UNLABELED',
+    'replaced_mode_confirm': lambda trip: emcdu.label_for_trip(trip, 'replaced_mode', labels_map) or 'UNLABELED',
     'survey': lambda trip: emcsc.survey_prompted_for_trip(trip, app_config),
     # 'primary_inferred_mode', maybe add later
     'primary_ble_sensed_mode': lambda trip: emcble.primary_ble_sensed_mode_for_trip(trip) or 'UNKNOWN',
 }
 
 
-def metric_summary_for_trips(metric: tuple[str, list[str]], confirmed_trips: list):
+async def metric_summary_for_trips(metric: tuple[str, list[str]], confirmed_trips: list):
     """
     :param metric: tuple of metric name and list of grouping fields
     :param confirmed_trips: list of confirmed trips
@@ -154,17 +164,8 @@ def metric_summary_for_trips(metric: tuple[str, list[str]], confirmed_trips: lis
                 continue
             # grouping_key e.g. 'mode_confirm_bike'
             grouping_key = grouping_field + '_' + field_value_for_trip
-            val = value_of_metric_for_trip(metric[0], grouping_field, trip)
-            # if it's a number, we're summing and adding to the total (used for distance, duration, count)
-            if type(val) == int or type(val) == float:
-                if grouping_key not in groups:
-                    groups[grouping_key] = 0
-                groups[grouping_key] += val
-            # if it's a string, we're counting the number of times it appears (used for response_count)
-            elif type(val) == str:
-                if grouping_key not in groups:
-                    groups[grouping_key] = {}
-                if val not in groups[grouping_key]:
-                    groups[grouping_key][val] = 0
-                groups[grouping_key][val] += 1
+            val = await value_of_metric_for_trip(metric[0], grouping_field, field_value_for_trip, trip)
+            groups[grouping_key] = acc_value_of_metric(metric[0],
+                                                       groups.get(grouping_key),
+                                                       val)
     return groups
