@@ -1,4 +1,4 @@
-from __future__ import annotations
+from __future__ import annotations  # __: skip
 
 import emcommon.logger as Log
 import emcommon.bluetooth.ble_matching as emcble

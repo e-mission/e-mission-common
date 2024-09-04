@@ -235,7 +235,7 @@ def get_rich_mode_for_value(value: str, label_options: dict):
         Log.error('No MODE in label_options')
         return None
     for opt in label_options['MODE']:
-        if opt.get('value') == value:
+        if 'value' in opt and opt['value'] == value:
             return get_rich_mode(opt)
 
     # if it wasn't a mode in the label_options, try getting a base mode

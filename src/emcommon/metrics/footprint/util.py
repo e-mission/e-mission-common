@@ -173,7 +173,8 @@ def find_worst_rich_mode(label_options):
         rm = emcdb.get_rich_mode(opt)
         if 'footprint' not in rm or 'transit' in rm['footprint']:
             continue
-        for fuel_type in rm['footprint']:
+        mode_footprint = dict(rm['footprint'])
+        for fuel_type in mode_footprint.keys():
             if 'wh_per_km' in rm['footprint'][fuel_type]:
                 wh_per_km = rm['footprint'][fuel_type]['wh_per_km']
                 if wh_per_km > _worst_wh_per_km:

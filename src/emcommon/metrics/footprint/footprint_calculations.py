@@ -35,6 +35,7 @@ async def calc_footprint_for_trip(trip, label_options, mode_value=None, labels_m
     """
     Calculate the estimated footprint of a trip, which includes 'kwh' and 'kg_co2' fields.
     """
+    trip = dict(trip)
     # Log.debug(f"Getting footprint for trip: {str(trip)}")
     mode_value = mode_value or emcdu.label_for_trip(trip, 'mode', labels_map)
     rich_mode = mode_value and emcdb.get_rich_mode_for_value(mode_value, label_options)
@@ -46,13 +47,13 @@ async def calc_footprint_for_trip(trip, label_options, mode_value=None, labels_m
         rich_mode = emcmfu.find_worst_rich_mode(label_options)
 
     (footprint, metadata) = await calc_footprint(
-        mode_footprint=rich_mode['footprint'],
-        distance=trip['distance'],
-        year=emcmfu.year_of_trip(trip),
-        passengers=rich_mode.get('passengers', 1),
-        coords=trip['start_loc']['coordinates'],
+        rich_mode['footprint'],
+        trip['distance'],
+        emcmfu.year_of_trip(trip),
+        trip['start_loc']['coordinates'],
         uace=trip.get('uace_region'),
         egrid_region=trip.get('egrid_region'),
+        passengers=rich_mode.get('passengers', 1),
         metadata={'trip_id': trip['_id']}
     )
     # If is_uncertain, the kwh and kg_co2 values represent the upper bound (worst-case scenario)
