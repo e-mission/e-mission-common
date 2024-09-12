@@ -1,9 +1,8 @@
-// Transcrypt'ed from Python, 2024-08-27 12:55:27
+// Transcrypt'ed from Python, 2024-09-03 12:26:34
 import {AssertionError, AttributeError, BaseException, DeprecationWarning, Exception, IndexError, IterableError, KeyError, NotImplementedError, RuntimeWarning, StopIteration, UserWarning, ValueError, Warning, __JsIterator__, __PyIterator__, __Terminal__, __add__, __and__, __call__, __class__, __envir__, __eq__, __floordiv__, __ge__, __get__, __getcm__, __getitem__, __getslice__, __getsm__, __gt__, __i__, __iadd__, __iand__, __idiv__, __ijsmod__, __ilshift__, __imatmul__, __imod__, __imul__, __in__, __init__, __ior__, __ipow__, __irshift__, __isub__, __ixor__, __jsUsePyNext__, __jsmod__, __k__, __kwargtrans__, __le__, __lshift__, __lt__, __matmul__, __mergefields__, __mergekwargtrans__, __mod__, __mul__, __ne__, __neg__, __nest__, __or__, __pow__, __pragma__, __pyUseJsNext__, __rshift__, __setitem__, __setproperty__, __setslice__, __sort__, __specialattrib__, __sub__, __super__, __t__, __terminal__, __truediv__, __withblock__, __xor__, _copy, _sort, abs, all, any, assert, bin, bool, bytearray, bytes, callable, chr, delattr, dict, dir, divmod, enumerate, filter, float, getattr, hasattr, hex, input, int, isinstance, issubclass, len, list, map, max, min, object, oct, ord, pow, print, property, py_TypeError, py_iter, py_metatype, py_next, py_reversed, py_typeof, range, repr, round, set, setattr, sorted, str, sum, tuple, zip} from './org.transcrypt.__runtime__.js';
-import * as emcdb from './emcommon.diary.base_modes.js';
 import {mpge_to_wh_per_km} from './emcommon.metrics.footprint.util.js';
 import * as Log from './emcommon.logger.js';
-export {emcdb, Log, mpge_to_wh_per_km};
+export {Log, mpge_to_wh_per_km};
 var __name__ = 'emcommon.diary.base_modes';
 import color from 'color'
 export var mode_colors = dict ({'pink': '#c32e85', 'red': '#c21725', 'orange': '#bf5900', 'green': '#008148', 'blue': '#0074b7', 'periwinkle': '#6356bf', 'magenta': '#9240a4', 'grey': '#555555', 'taupe': '#7d585a'});
@@ -35,8 +34,19 @@ export var get_base_mode_by_key = function (motionName) {
 	var py_pop = key.py_split ('.').py_pop ();
 	return BASE_MODES.py_get (py_pop, BASE_MODES ['UNKNOWN']);
 };
+export var get_rich_mode_for_value = function (value, label_options) {
+	if (!__in__ ('MODE', label_options)) {
+		Log.error ('No MODE in label_options');
+		return null;
+	}
+	for (var opt of label_options ['MODE']) {
+		if (__in__ ('value', opt) && opt ['value'] == value) {
+			return get_rich_mode (opt);
+		}
+	}
+	return get_base_mode_by_key (value);
+};
 export var get_rich_mode = function (label_option) {
-	Log.debug ('Getting rich mode for label_option: {}'.format (label_option));
 	var rich_mode = (function () {
 		var __accu0__ = [];
 		for (var [k, v] of dict (label_option).py_items ()) {
@@ -50,7 +60,13 @@ export var get_rich_mode = function (label_option) {
 			rich_mode [prop] = label_option [prop];
 		}
 		else if (__in__ ('{}_equivalent'.format (prop), label_option)) {
-			rich_mode [prop] = emcdb.get_base_mode_by_key (label_option ['{}_equivalent'.format (prop)]) [prop];
+			var eq_base_mode = get_base_mode_by_key (label_option ['{}_equivalent'.format (prop)]);
+			if (__in__ (prop, eq_base_mode)) {
+				rich_mode [prop] = eq_base_mode [prop];
+			}
+			else {
+				Log.warn ('Opt {} had {}_equivalent={} but {} not in {}'.format (label_option ['value'], prop, label_option ['{}_equivalent'.format (prop)], prop, eq_base_mode));
+			}
 		}
 		else {
 			for (var bm of ['base_mode', 'baseMode']) {
@@ -63,7 +79,6 @@ export var get_rich_mode = function (label_option) {
 			}
 		}
 	}
-	Log.debug ('Rich mode: {}'.format (rich_mode));
 	return rich_mode;
 };
 export var scale_lightness = function (hex_color, factor) {
@@ -78,9 +93,11 @@ export var scale_lightness = function (hex_color, factor) {
 		return color_obj.lighten (factor - 1).hex ();
 	}
 };
-export var dedupe_colors = function (colors) {
+export var dedupe_colors = function (colors, adjustment_range) {
+	if (typeof adjustment_range == 'undefined' || (adjustment_range != null && adjustment_range.hasOwnProperty ("__kwargtrans__"))) {;
+		adjustment_range = [1, 2];
+	};
 	var colors_deduped = dict ({});
-	var max_adjustment = 0.6;
 	for (var [key, color] of colors) {
 		if (!(color) || __in__ (key, colors_deduped)) {
 			continue;
@@ -96,7 +113,10 @@ export var dedupe_colors = function (colors) {
 		}) ();
 		if (len (duplicates) > 1) {
 			for (var [i, [k, c]] of enumerate (duplicates)) {
-				var factor = (1 - max_adjustment) + ((max_adjustment * 2) / (len (duplicates) - 1)) * i;
+				var __left0__ = adjustment_range;
+				var min_adj = __left0__ [0];
+				var max_adj = __left0__ [1];
+				var factor = min_adj + ((max_adj - min_adj) / (len (duplicates) - 1)) * i;
 				colors_deduped [k] = scale_lightness (c, factor);
 			}
 		}

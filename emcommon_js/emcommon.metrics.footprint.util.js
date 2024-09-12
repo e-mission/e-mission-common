@@ -1,8 +1,9 @@
-// Transcrypt'ed from Python, 2024-08-27 12:55:27
+// Transcrypt'ed from Python, 2024-09-03 12:43:47
 import {AssertionError, AttributeError, BaseException, DeprecationWarning, Exception, IndexError, IterableError, KeyError, NotImplementedError, RuntimeWarning, StopIteration, UserWarning, ValueError, Warning, __JsIterator__, __PyIterator__, __Terminal__, __add__, __and__, __call__, __class__, __envir__, __eq__, __floordiv__, __ge__, __get__, __getcm__, __getitem__, __getslice__, __getsm__, __gt__, __i__, __iadd__, __iand__, __idiv__, __ijsmod__, __ilshift__, __imatmul__, __imod__, __imul__, __in__, __init__, __ior__, __ipow__, __irshift__, __isub__, __ixor__, __jsUsePyNext__, __jsmod__, __k__, __kwargtrans__, __le__, __lshift__, __lt__, __matmul__, __mergefields__, __mergekwargtrans__, __mod__, __mul__, __ne__, __neg__, __nest__, __or__, __pow__, __pragma__, __pyUseJsNext__, __rshift__, __setitem__, __setproperty__, __setslice__, __sort__, __specialattrib__, __sub__, __super__, __t__, __terminal__, __truediv__, __withblock__, __xor__, _copy, _sort, abs, all, any, assert, bin, bool, bytearray, bytes, callable, chr, delattr, dict, dir, divmod, enumerate, filter, float, getattr, hasattr, hex, input, int, isinstance, issubclass, len, list, map, max, min, object, oct, ord, pow, print, property, py_TypeError, py_iter, py_metatype, py_next, py_reversed, py_typeof, range, repr, round, set, setattr, sorted, str, sum, tuple, zip} from './org.transcrypt.__runtime__.js';
+import * as emcdb from './emcommon.diary.base_modes.js';
 import {fetch_url, read_json_resource} from './emcommon.util.js';
 import * as Log from './emcommon.logger.js';
-export {fetch_url, Log, read_json_resource};
+export {Log, fetch_url, read_json_resource, emcdb};
 var __name__ = 'emcommon.metrics.footprint.util';
 export var KWH_PER_GAL_GASOLINE = 33.7;
 export var DIESEL_GGE = 0.88;
@@ -57,10 +58,15 @@ export var get_feature_containing_point = function (pt, geojson) {
 	}
 	return null;
 };
+export var latest_egrid_year = null;
+export var latest_ntd_year = null;
 export var get_egrid_region = async function (coords, year) {
 	if (year < 2018) {
 		Log.warn ('eGRID data not available for {}. Using 2018.'.format (year));
 		return await get_egrid_region (coords, 2018);
+	}
+	if (latest_egrid_year !== null && year > latest_egrid_year) {
+		return await get_egrid_region (coords, latest_egrid_year);
 	}
 	try {
 		var geojson = await read_json_resource ('egrid{}_subregions_5pct.json'.format (year));
@@ -68,6 +74,7 @@ export var get_egrid_region = async function (coords, year) {
 	catch (__except0__) {
 		if (year > 2018) {
 			Log.warn ('eGRID data not available for {}. Trying {}.'.format (year, year - 1));
+			latest_egrid_year = year - 1;
 			return await get_egrid_region (coords, year - 1);
 		}
 		Log.error ('eGRID lookup failed for {}.'.format (year));
@@ -77,6 +84,7 @@ export var get_egrid_region = async function (coords, year) {
 	if (region_feature !== null) {
 		return region_feature ['properties'] ['name'];
 	}
+	Log.warn ('An eGRID region was not found for coords {} in year {}.'.format (coords, year));
 	return null;
 };
 export var get_uace_by_coords = async function (coords, year) {
@@ -101,7 +109,7 @@ export var get_uace_by_coords = async function (coords, year) {
 			}
 		}
 	}
-	Log.error ('Geocoding response did not contain UA for coords {} in year {}: {}'.format (coords, year, data));
+	Log.warn ('Urban Area not in geocoding response for coords {} in year {}: {}'.format (coords, year, url));
 	return null;
 };
 export var get_intensities_data = async function (year, dataset) {
@@ -109,17 +117,54 @@ export var get_intensities_data = async function (year, dataset) {
 		Log.warn ('{} data not available for {}. Using 2018.'.format (dataset, year));
 		return await get_intensities_data (2018, dataset);
 	}
+	if (dataset == 'egrid' && latest_egrid_year !== null && year > latest_egrid_year) {
+		return await get_intensities_data (latest_egrid_year, dataset);
+	}
+	if (dataset == 'ntd' && latest_ntd_year !== null && year > latest_ntd_year) {
+		return await get_intensities_data (latest_ntd_year, dataset);
+	}
 	try {
 		return await read_json_resource ('{}{}_intensities.json'.format (dataset, year));
 	}
 	catch (__except0__) {
 		if (year > 2018) {
 			Log.warn ('{} data not available for {}. Trying {}.'.format (dataset, year, year - 1));
+			if (dataset == 'egrid') {
+				latest_egrid_year = year - 1;
+			}
+			else if (dataset == 'ntd') {
+				latest_ntd_year = year - 1;
+			}
 			return await get_intensities_data (year - 1, dataset);
 		}
 		Log.error ('eGRID lookup failed for {}.'.format (year));
 		return null;
 	}
+};
+export var _worst_rich_mode = null;
+export var _worst_wh_per_km = 0;
+export var find_worst_rich_mode = function (label_options) {
+	if (_worst_rich_mode !== null) {
+		return _worst_rich_mode;
+	}
+	for (var opt of label_options ['MODE']) {
+		var rm = emcdb.get_rich_mode (opt);
+		if (!__in__ ('footprint', rm) || __in__ ('transit', rm ['footprint'])) {
+			continue;
+		}
+		var mode_footprint = dict (rm ['footprint']);
+		for (var fuel_type of mode_footprint.py_keys ()) {
+			if (__in__ ('wh_per_km', rm ['footprint'] [fuel_type])) {
+				var wh_per_km = rm ['footprint'] [fuel_type] ['wh_per_km'];
+				if (wh_per_km > _worst_wh_per_km) {
+					_worst_rich_mode = rm;
+					_worst_wh_per_km = wh_per_km;
+				}
+			}
+		}
+	}
+	Log.debug ('Worst rich mode is {} with {} wh_per_km'.format (str (_worst_rich_mode ['value']), str (_worst_wh_per_km)));
+	return _worst_rich_mode;
 };
 
 //# sourceMappingURL=emcommon.metrics.footprint.util.map
