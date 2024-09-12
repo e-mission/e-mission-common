@@ -3,31 +3,36 @@ import emcommon.logger as Log
 from emcommon.util import read_json_resource, fetch_url
 import emcommon.diary.base_modes as emcdb
 
-# https://www.epa.gov/energy/greenhouse-gases-equivalencies-calculator-calculations-and-references
-
-KWH_PER_GAL_GASOLINE = 33.7  # from the EPA, used as the basis for MPGe
-DIESEL_GGE = 0.88  # .88 gal diesel ≈ 1 gal gasoline
-KWH_PER_GAL_DIESEL = KWH_PER_GAL_GASOLINE * 1.14
-# GGE constants found from https://epact.energy.gov/fuel-conversion-factors
-KWH_PER_GAL_BIODIESEL = KWH_PER_GAL_GASOLINE * 1.05
-KWH_PER_GAL_LPG = KWH_PER_GAL_GASOLINE * .74
-KWH_PER_GAL_CNG = KWH_PER_GAL_GASOLINE * .26
-KWH_PER_KG_HYDROGEN = KWH_PER_GAL_GASOLINE * 1.00
-KWH_PER_GAL_OTHER = KWH_PER_GAL_GASOLINE * 1.00  # TODO find a better default value
-
-FUELS_KG_CO2_PER_KWH = {
-    # 8.89 kg CO2 / gal (EPA)
-    'gasoline': 8.89 / KWH_PER_GAL_GASOLINE,
-    # 10.18 kg CO2 / gal (EPA)
-    'diesel': 10.18 / (KWH_PER_GAL_GASOLINE / DIESEL_GGE),
-    # 0.25 kg CO2 / kWh (https://www.eia.gov/environment/emissions/co2_vol_mass.php)
-    'jet_fuel': 0.25,
-
-    'cng': 0.25,  # TODO !!
-    'lpg': 0.25,  # TODO !!
-}
-
 MI_PER_KM = 0.621371
+
+# 114,000 BTU / gal -> 33.41 kWh / gal
+# consistent with DOE ranges for lower heating value (112,114 – 116,090)
+# this is used for energy intensities
+KWH_PER_GGE = 33.41
+
+# MPGe is based on EPA's conversion factor, slightly higher than DOE / GREET
+# this is ONLY used to convert MPGe to Wh/km
+MPGE_KWH_PER_GAL = 33.7  # 33.7 kWh per gallon of gasoline equivalent
+
+# GGE constants found from https://epact.energy.gov/fuel-conversion-factors
+KWH_PER_GAL_GASOLINE = KWH_PER_GGE * 1.00
+KWH_PER_GAL_DIESEL = KWH_PER_GGE * 1.14
+KWH_PER_GAL_BIODIESEL = KWH_PER_GGE * 1.05
+KWH_PER_GAL_LPG = KWH_PER_GGE * .74
+KWH_PER_GAL_CNG = KWH_PER_GGE * .26  # based on 3600 psi, industry standard
+KWH_PER_KG_HYDROGEN = KWH_PER_GGE * 1.00
+# TODO can we handle the default case better? https://github.com/JGreenlee/e-mission-common/pull/3#discussion_r1739188643
+KWH_PER_GAL_OTHER = KWH_PER_GGE * 1.00
+
+# from CHEER paper 2024
+FUELS_KG_CO2_PER_MWH = {
+    'gasoline': 324.183,
+    'diesel': 325.073,
+    'jet_fuel': 304.354,
+    'lpg': 279.192,
+    'cng': 271.024,
+    'hydrogen': 332.852,
+}
 
 
 def mpge_to_wh_per_km(mpge: float) -> float:
@@ -35,7 +40,7 @@ def mpge_to_wh_per_km(mpge: float) -> float:
     Convert miles per gallon of gasoline equivalent (MPGe) to watt-hours per kilometer.
     e.g. mpge_to_wh_per_km(100) -> 209.40202700000003
     """
-    return MI_PER_KM / mpge * KWH_PER_GAL_GASOLINE * 1000
+    return MI_PER_KM / mpge * MPGE_KWH_PER_GAL * 1000
 
 
 def year_of_trip(trip) -> int:

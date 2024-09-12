@@ -43,36 +43,54 @@ E_BIKING_METS = {
     "ALL": {"range": [0, float('inf')], "mets": 4.9}
 }
 
-# "average" values for various modes of transportation
-# TODO get these from GREET or somewhere trustworthy
-GAS_CAR_MPG = 24
-ECAR_MPGE = 100
-PHEV_UF = 0.4  # UF = utility factor
-PHEV_GAS_MPG = 40
-PHEV_ELEC_MPGE = 100
+
+# from CHEER paper 2024
+ICEV_WH_PER_KM = 898.77
+# TODO We don't differentiate between ICEV and HEV, we just have 'CAR'.
+# Should we obtain an average of the two and use that?
+# https://github.com/JGreenlee/e-mission-common/pull/3#discussion_r1739147201
+HEV_WH_PER_KM = 625.22
+PHEV_ELEC_WH_PER_KM = 289.1
+PHEV_GAS_WH_PER_KM = 663.5
+BEV_WH_PER_KM = 286.8
+RIDEHAIL_WH_PER_KM = 1198.36
+AIR_WH_PER_KM = 493.91
 E_BIKE_WH_PER_KM = 13.67
-E_SCOOTER_WH_PER_KM = 16.78
-MOPED_AVG_MPG = 100
-TAXI_WH_PER_KM = 941.5
-AIR_WH_PER_KM = 999
+BIKESHARE_WH_PER_TRIP = 90
+SCOOTERSHARE_WH_PER_KM = 16.78
+SCOOTERSHARE_WH_PER_TRIP = 4.1
+
+# TODO find a source for this. GREET and EPA do not have data for 2-wheelers
+# We may potentially broaden this to "MOTORCYCLE" because "MOPED" is fairly narrow
+# For now, leaving 100 MPGe as a conservative estimate for mopeds only
+# https://github.com/JGreenlee/e-mission-common/pull/3#discussion_r1735536476
+MOPED_WH_PER_KM = mpge_to_wh_per_km(100)  # 209.4
+
+# https://theicct.org/wp-content/uploads/2021/06/PHEV-FS-EN-sept2020-0.pdf
+PHEV_UF = 0.37
+
 
 AIR_FOOTPRINT = {"jet_fuel": {"wh_per_km": AIR_WH_PER_KM}}
-CAR_FOOTPRINT = {"gasoline": {"wh_per_km": mpge_to_wh_per_km(GAS_CAR_MPG)}}
-E_CAR_FOOTPRINT = {"electric": {"wh_per_km": mpge_to_wh_per_km(ECAR_MPGE)}}
+CAR_FOOTPRINT = {"gasoline": {"wh_per_km": ICEV_WH_PER_KM}}
+E_CAR_FOOTPRINT = {"electric": {"wh_per_km": BEV_WH_PER_KM}}
 PHEV_CAR_FOOTPRINT = {
     "electric": {
-        "wh_per_km": mpge_to_wh_per_km(PHEV_ELEC_MPGE),
+        "wh_per_km": PHEV_ELEC_WH_PER_KM,
         "weight": PHEV_UF
     },
     "gasoline": {
-        "wh_per_km": mpge_to_wh_per_km(PHEV_GAS_MPG),
+        "wh_per_km": PHEV_GAS_WH_PER_KM,
         "weight": 1 - PHEV_UF
     },
 }
 E_BIKE_FOOTPRINT = {"electric": {"wh_per_km": E_BIKE_WH_PER_KM}}
-E_SCOOTER_FOOTPRINT = {"electric": {"wh_per_km": E_SCOOTER_WH_PER_KM}}
-MOPED_FOOTPRINT = {"gasoline": {"wh_per_km": mpge_to_wh_per_km(MOPED_AVG_MPG)}}
-TAXI_FOOTPRINT = {"gasoline": {"wh_per_km": TAXI_WH_PER_KM}}
+E_SCOOTER_FOOTPRINT = {"electric": {
+    "wh_per_km": SCOOTERSHARE_WH_PER_KM,
+    "wh_per_trip": SCOOTERSHARE_WH_PER_TRIP
+}}
+BIKESHARE_FOOTPRINT = {"diesel": {"wh_per_trip": BIKESHARE_WH_PER_TRIP}}
+MOPED_FOOTPRINT = {"gasoline": {"wh_per_km": MOPED_WH_PER_KM}}
+TAXI_FOOTPRINT = {"gasoline": {"wh_per_km": RIDEHAIL_WH_PER_KM}}
 
 BASE_MODES = {
     # BEGIN MotionTypes
@@ -142,6 +160,12 @@ BASE_MODES = {
         "color": mode_colors['periwinkle'],
         "met": NON_ACTIVE_METS,
         "footprint": E_SCOOTER_FOOTPRINT,
+    },
+    "BIKESHARE": {
+        "icon": 'bicycle',
+        "color": mode_colors['green'],
+        "met": BIKING_METS,
+        "footprint": BIKESHARE_FOOTPRINT,
     },
     "MOPED": {
         "icon": 'moped',
