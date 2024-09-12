@@ -135,6 +135,7 @@ grouping_field_fns = {
     'survey': lambda trip: emcsc.survey_prompted_for_trip(trip, app_config),
     # 'primary_inferred_mode', maybe add later
     'primary_ble_sensed_mode': lambda trip: emcble.primary_ble_sensed_mode_for_trip(trip) or 'UNKNOWN',
+    'mode': lambda trip: emcdu.primary_mode_for_trip(trip, labels_map) or 'UNKNOWN',
 }
 
 
