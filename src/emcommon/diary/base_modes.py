@@ -55,14 +55,14 @@ BEV_WH_PER_KM = 286.8
 RIDEHAIL_WH_PER_KM = 1198.36
 AIR_WH_PER_KM = 493.91
 E_BIKE_WH_PER_KM = 13.67
-BIKESHARE_WH_PER_TRIP = 90  # TODO We don't have a base mode for bikeshare. Should we?
+BIKESHARE_WH_PER_TRIP = 90
 SCOOTERSHARE_WH_PER_KM = 16.78
 SCOOTERSHARE_WH_PER_TRIP = 4.1
 
-
-# TODO need to check GREET for moped
+# TODO find a source for this. GREET and EPA do not have data for 2-wheelers
+# We may potentially broaden this to "MOTORCYCLE" because "MOPED" is fairly narrow
+# For now, leaving 100 MPGe as a conservative estimate for mopeds only
 MOPED_WH_PER_KM = mpge_to_wh_per_km(100)  # 209.4
-
 
 # https://theicct.org/wp-content/uploads/2021/06/PHEV-FS-EN-sept2020-0.pdf
 PHEV_UF = 0.37
@@ -86,6 +86,7 @@ E_SCOOTER_FOOTPRINT = {"electric": {
     "wh_per_km": SCOOTERSHARE_WH_PER_KM,
     "wh_per_trip": SCOOTERSHARE_WH_PER_TRIP
 }}
+BIKESHARE_FOOTPRINT = {"diesel": {"wh_per_trip": BIKESHARE_WH_PER_TRIP}}
 MOPED_FOOTPRINT = {"gasoline": {"wh_per_km": MOPED_WH_PER_KM}}
 TAXI_FOOTPRINT = {"gasoline": {"wh_per_km": RIDEHAIL_WH_PER_KM}}
 
@@ -157,6 +158,12 @@ BASE_MODES = {
         "color": mode_colors['periwinkle'],
         "met": NON_ACTIVE_METS,
         "footprint": E_SCOOTER_FOOTPRINT,
+    },
+    "BIKESHARE": {
+        "icon": 'bicycle',
+        "color": mode_colors['green'],
+        "met": BIKING_METS,
+        "footprint": BIKESHARE_FOOTPRINT,
     },
     "MOPED": {
         "icon": 'moped',
