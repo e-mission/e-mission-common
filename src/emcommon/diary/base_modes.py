@@ -48,6 +48,7 @@ E_BIKING_METS = {
 ICEV_WH_PER_KM = 898.77
 # TODO We don't differentiate between ICEV and HEV, we just have 'CAR'.
 # Should we obtain an average of the two and use that?
+# https://github.com/JGreenlee/e-mission-common/pull/3#discussion_r1739147201
 HEV_WH_PER_KM = 625.22
 PHEV_ELEC_WH_PER_KM = 289.1
 PHEV_GAS_WH_PER_KM = 663.5
@@ -62,6 +63,7 @@ SCOOTERSHARE_WH_PER_TRIP = 4.1
 # TODO find a source for this. GREET and EPA do not have data for 2-wheelers
 # We may potentially broaden this to "MOTORCYCLE" because "MOPED" is fairly narrow
 # For now, leaving 100 MPGe as a conservative estimate for mopeds only
+# https://github.com/JGreenlee/e-mission-common/pull/3#discussion_r1735536476
 MOPED_WH_PER_KM = mpge_to_wh_per_km(100)  # 209.4
 
 # https://theicct.org/wp-content/uploads/2021/06/PHEV-FS-EN-sept2020-0.pdf

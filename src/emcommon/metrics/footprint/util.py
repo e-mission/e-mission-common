@@ -20,7 +20,8 @@ KWH_PER_GAL_BIODIESEL = KWH_PER_GGE * 1.05
 KWH_PER_GAL_LPG = KWH_PER_GGE * .74
 KWH_PER_GAL_CNG = KWH_PER_GGE * .26  # based on 3600 psi, industry standard
 KWH_PER_KG_HYDROGEN = KWH_PER_GGE * 1.00
-KWH_PER_GAL_OTHER = KWH_PER_GGE * 1.00  # TODO can we handle the default case better?
+# TODO can we handle the default case better? https://github.com/JGreenlee/e-mission-common/pull/3#discussion_r1739188643
+KWH_PER_GAL_OTHER = KWH_PER_GGE * 1.00
 
 # from CHEER paper 2024
 FUELS_KG_CO2_PER_MWH = {
