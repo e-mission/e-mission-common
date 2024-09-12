@@ -241,6 +241,12 @@ BASE_MODES = {
         # met not known; left undefined
         # footprint not known; left undefined
     },
+    "NONE": {
+        "icon": 'cancel',
+        "color": mode_colors['grey'],
+        "met": NON_ACTIVE_METS,
+        "footprint": {},
+    }
 }
 
 
