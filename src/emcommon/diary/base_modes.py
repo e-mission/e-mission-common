@@ -15,9 +15,6 @@ mode_colors = {
     "taupe": '#7d585a',  # oklch(50% 0.05 15)     # ferry, trolleybus, user-defined modes
 }
 
-NON_ACTIVE_METS = {
-    "ALL": {"range": [0, float('inf')]},
-}
 WALKING_METS = {
     "VERY_SLOW": {"range": [0, 2.0], "mets": 2.0},
     "SLOW": {"range": [2.0, 2.5], "mets": 2.8},
@@ -97,7 +94,7 @@ BASE_MODES = {
     "IN_VEHICLE": {
         "icon": 'speedometer',
         "color": mode_colors['red'],
-        "met": NON_ACTIVE_METS,
+        "met": {},
         # footprint not known; left undefined. later filled in by an average of:
         # CAR, BUS, LIGHT_RAIL, TRAIN, TRAM, SUBWAY
     },
@@ -127,26 +124,26 @@ BASE_MODES = {
     "AIR_OR_HSR": {
         "icon": 'airplane',
         "color": mode_colors['orange'],
-        "met": NON_ACTIVE_METS,
+        "met": {},
         "footprint": AIR_FOOTPRINT,
     },
     # END MotionTypes
     "CAR": {
         "icon": 'car',
         "color": mode_colors['red'],
-        "met": NON_ACTIVE_METS,
+        "met": {},
         "footprint": CAR_FOOTPRINT,
     },
     "E_CAR": {
         "icon": 'car-electric',
         "color": mode_colors['pink'],
-        "met": NON_ACTIVE_METS,
+        "met": {},
         "footprint": E_CAR_FOOTPRINT,
     },
     "PHEV_CAR": {
         "icon": 'car-electric',
         "color": mode_colors['pink'],
-        "met": NON_ACTIVE_METS,
+        "met": {},
         "footprint": PHEV_CAR_FOOTPRINT,
     },
     "E_BIKE": {
@@ -158,7 +155,7 @@ BASE_MODES = {
     "E_SCOOTER": {
         "icon": 'scooter-electric',
         "color": mode_colors['periwinkle'],
-        "met": NON_ACTIVE_METS,
+        "met": {},
         "footprint": E_SCOOTER_FOOTPRINT,
     },
     "BIKESHARE": {
@@ -170,63 +167,63 @@ BASE_MODES = {
     "MOPED": {
         "icon": 'moped',
         "color": mode_colors['green'],
-        "met": NON_ACTIVE_METS,
+        "met": {},
         "footprint": MOPED_FOOTPRINT,
     },
     "TAXI": {
         "icon": 'taxi',
         "color": mode_colors['red'],
-        "met": NON_ACTIVE_METS,
+        "met": {},
         "footprint": TAXI_FOOTPRINT,
     },
     "BUS": {
         "icon": 'bus-side',
         "color": mode_colors['magenta'],
-        "met": NON_ACTIVE_METS,
+        "met": {},
         # fixed-route bus, bus rapid transit, commuter bus
         "footprint": {"transit": ["MB", "RB", "CB"]},
     },
     "AIR": {
         "icon": 'airplane',
         "color": mode_colors['orange'],
-        "met": NON_ACTIVE_METS,
+        "met": {},
         "footprint": AIR_FOOTPRINT,
     },
     "LIGHT_RAIL": {
         "icon": 'train-car-passenger',
         "color": mode_colors['periwinkle'],
-        "met": NON_ACTIVE_METS,
+        "met": {},
         "footprint": {"transit": ["LR"]}  # light rail
     },
     "TRAIN": {
         "icon": 'train-car-passenger',
         "color": mode_colors['periwinkle'],
-        "met": NON_ACTIVE_METS,
+        "met": {},
         # light rail, heavy rail, hybrid rail, commuter rail
         "footprint": {"transit": ["LR", "HR", "YR", "CR"]}
     },
     "TRAM": {
         "icon": 'tram',
         "color": mode_colors['periwinkle'],
-        "met": NON_ACTIVE_METS,
+        "met": {},
         "footprint": {"transit": ["SR"]}  # streetcar
     },
     "SUBWAY": {
         "icon": 'subway-variant',
         "color": mode_colors['periwinkle'],
-        "met": NON_ACTIVE_METS,
+        "met": {},
         "footprint": {"transit": ["HR"]}  # heavy rail
     },
     "FERRY": {
         "icon": 'ferry',
         "color": mode_colors['taupe'],
-        "met": NON_ACTIVE_METS,
+        "met": {},
         "footprint": {"transit": ["FB"]}  # ferry boat
     },
     "TROLLEYBUS": {
         "icon": 'bus-side',
         "color": mode_colors['taupe'],
-        "met": NON_ACTIVE_METS,
+        "met": {},
         "footprint": {"transit": ["TB", "SR"]}  # trolleybus, streetcar
     },
     "UNPROCESSED": {
@@ -244,7 +241,7 @@ BASE_MODES = {
     "NONE": {
         "icon": 'cancel',
         "color": mode_colors['grey'],
-        "met": NON_ACTIVE_METS,
+        "met": {},
         "footprint": {},
     }
 }
