@@ -1,22 +1,22 @@
-// Transcrypt'ed from Python, 2024-09-03 12:43:47
+// Transcrypt'ed from Python, 2024-09-16 11:51:19
 import {AssertionError, AttributeError, BaseException, DeprecationWarning, Exception, IndexError, IterableError, KeyError, NotImplementedError, RuntimeWarning, StopIteration, UserWarning, ValueError, Warning, __JsIterator__, __PyIterator__, __Terminal__, __add__, __and__, __call__, __class__, __envir__, __eq__, __floordiv__, __ge__, __get__, __getcm__, __getitem__, __getslice__, __getsm__, __gt__, __i__, __iadd__, __iand__, __idiv__, __ijsmod__, __ilshift__, __imatmul__, __imod__, __imul__, __in__, __init__, __ior__, __ipow__, __irshift__, __isub__, __ixor__, __jsUsePyNext__, __jsmod__, __k__, __kwargtrans__, __le__, __lshift__, __lt__, __matmul__, __mergefields__, __mergekwargtrans__, __mod__, __mul__, __ne__, __neg__, __nest__, __or__, __pow__, __pragma__, __pyUseJsNext__, __rshift__, __setitem__, __setproperty__, __setslice__, __sort__, __specialattrib__, __sub__, __super__, __t__, __terminal__, __truediv__, __withblock__, __xor__, _copy, _sort, abs, all, any, assert, bin, bool, bytearray, bytes, callable, chr, delattr, dict, dir, divmod, enumerate, filter, float, getattr, hasattr, hex, input, int, isinstance, issubclass, len, list, map, max, min, object, oct, ord, pow, print, property, py_TypeError, py_iter, py_metatype, py_next, py_reversed, py_typeof, range, repr, round, set, setattr, sorted, str, sum, tuple, zip} from './org.transcrypt.__runtime__.js';
-import * as emcdb from './emcommon.diary.base_modes.js';
 import {fetch_url, read_json_resource} from './emcommon.util.js';
 import * as Log from './emcommon.logger.js';
-export {Log, fetch_url, read_json_resource, emcdb};
+export {fetch_url, read_json_resource, Log};
 var __name__ = 'emcommon.metrics.footprint.util';
-export var KWH_PER_GAL_GASOLINE = 33.7;
-export var DIESEL_GGE = 0.88;
-export var KWH_PER_GAL_DIESEL = KWH_PER_GAL_GASOLINE * 1.14;
-export var KWH_PER_GAL_BIODIESEL = KWH_PER_GAL_GASOLINE * 1.05;
-export var KWH_PER_GAL_LPG = KWH_PER_GAL_GASOLINE * 0.74;
-export var KWH_PER_GAL_CNG = KWH_PER_GAL_GASOLINE * 0.26;
-export var KWH_PER_KG_HYDROGEN = KWH_PER_GAL_GASOLINE * 1.0;
-export var KWH_PER_GAL_OTHER = KWH_PER_GAL_GASOLINE * 1.0;
-export var FUELS_KG_CO2_PER_KWH = dict ({'gasoline': 8.89 / KWH_PER_GAL_GASOLINE, 'diesel': 10.18 / (KWH_PER_GAL_GASOLINE / DIESEL_GGE), 'jet_fuel': 0.25, 'cng': 0.25, 'lpg': 0.25});
 export var MI_PER_KM = 0.621371;
+export var KWH_PER_GGE = 33.41;
+export var MPGE_KWH_PER_GAL = 33.7;
+export var KWH_PER_GAL_GASOLINE = KWH_PER_GGE * 1.0;
+export var KWH_PER_GAL_DIESEL = KWH_PER_GGE * 1.14;
+export var KWH_PER_GAL_BIODIESEL = KWH_PER_GGE * 1.05;
+export var KWH_PER_GAL_LPG = KWH_PER_GGE * 0.74;
+export var KWH_PER_GAL_CNG = KWH_PER_GGE * 0.26;
+export var KWH_PER_KG_HYDROGEN = KWH_PER_GGE * 1.0;
+export var KWH_PER_GAL_OTHER = KWH_PER_GGE * 1.0;
+export var FUELS_KG_CO2_PER_MWH = dict ({'gasoline': 324.183, 'diesel': 325.073, 'jet_fuel': 304.354, 'lpg': 279.192, 'cng': 271.024, 'hydrogen': 332.852});
 export var mpge_to_wh_per_km = function (mpge) {
-	return ((MI_PER_KM / mpge) * KWH_PER_GAL_GASOLINE) * 1000;
+	return ((MI_PER_KM / mpge) * MPGE_KWH_PER_GAL) * 1000;
 };
 export var year_of_trip = function (trip) {
 	return int (trip ['start_fmt_time'].py_split ('-') [0]);
@@ -140,31 +140,6 @@ export var get_intensities_data = async function (year, dataset) {
 		Log.error ('eGRID lookup failed for {}.'.format (year));
 		return null;
 	}
-};
-export var _worst_rich_mode = null;
-export var _worst_wh_per_km = 0;
-export var find_worst_rich_mode = function (label_options) {
-	if (_worst_rich_mode !== null) {
-		return _worst_rich_mode;
-	}
-	for (var opt of label_options ['MODE']) {
-		var rm = emcdb.get_rich_mode (opt);
-		if (!__in__ ('footprint', rm) || __in__ ('transit', rm ['footprint'])) {
-			continue;
-		}
-		var mode_footprint = dict (rm ['footprint']);
-		for (var fuel_type of mode_footprint.py_keys ()) {
-			if (__in__ ('wh_per_km', rm ['footprint'] [fuel_type])) {
-				var wh_per_km = rm ['footprint'] [fuel_type] ['wh_per_km'];
-				if (wh_per_km > _worst_wh_per_km) {
-					_worst_rich_mode = rm;
-					_worst_wh_per_km = wh_per_km;
-				}
-			}
-		}
-	}
-	Log.debug ('Worst rich mode is {} with {} wh_per_km'.format (str (_worst_rich_mode ['value']), str (_worst_wh_per_km)));
-	return _worst_rich_mode;
 };
 
 //# sourceMappingURL=emcommon.metrics.footprint.util.map
