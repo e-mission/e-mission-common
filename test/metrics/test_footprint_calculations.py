@@ -38,7 +38,10 @@ class TestFootprintCalculations(unittest.IsolatedAsyncioTestCase):
 
         (footprint, metadata) = await emcmff.calc_footprint_for_trip(fake_trip, fake_mode)
 
-        expected_footprint = {'kwh': 0.1, 'kg_co2': 0.1 * emcmfu.FUELS_KG_CO2_PER_KWH['gasoline']}
+        expected_footprint = {
+            'kwh': 0.1,
+            'kg_co2': (0.1 / 1000) * emcmfu.FUELS_KG_CO2_PER_MWH['gasoline']
+        }
         for key in expected_footprint:
             self.assertAlmostEqual(footprint[key], expected_footprint[key], places=2)
 

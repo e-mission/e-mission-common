@@ -86,9 +86,9 @@ async def calc_footprint(mode_footprint, distance, year, coords, uace=None,
         if 'wh_per_trip' in fuel_type_footprint:
             kwh += fuel_type_footprint['wh_per_trip'] / 1000
 
-        if fuel_type in emcmfu.FUELS_KG_CO2_PER_KWH:
+        if fuel_type in emcmfu.FUELS_KG_CO2_PER_MWH:
             # Log.debug('Using default carbon intensity for fuel type: ' + fuel_type)
-            kg_co2 = kwh * emcmfu.FUELS_KG_CO2_PER_KWH[fuel_type]
+            kg_co2 = (kwh / 1000) * emcmfu.FUELS_KG_CO2_PER_MWH[fuel_type]
         elif fuel_type == 'electric':
             # Log.debug('Using eGRID carbon intensity for electric')
             (kg_per_mwh, egrid_metadata) = await emcmfe.get_egrid_intensity(
