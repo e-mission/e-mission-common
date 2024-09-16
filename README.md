@@ -12,8 +12,11 @@ This repository uses the [Transcrypt](https://www.transcrypt.org/) library to co
 . bin/setup.sh
 ```
 
-This will set up a `venv`, and install dependencies from both `pip` and `npm`.
-Re-run this if you change the dependencies in `requirements.txt` or `package.json`.
+This will:
+ - Retrieve setup scripts from `e-mission-server` and use them to set up a conda environment called `emcommon` with the dependencies listed in `bin/environment.yml` This way, the `emcommon` environment uses the same Python version as `e-mission-server`.
+ - Run `npm install`.
+
+Re-run this if you change the dependencies in `environment.yml` or `package.json`.
 
 ## To contribute
 
@@ -74,21 +77,32 @@ Re-run this if you change the dependencies in `requirements.txt` or `package.jso
 
 For more detail, refer to the Transcrypt docs on the [many kinds of pragmas available.](https://www.transcrypt.org/docs/html/special_facilities.html)
 
-## Dev workflow to test local changes in other repos
+## Using e-mission-common in a Python or JavaScript project
 
-For Python:
+### For Python:
 
-1. Make your local changes in the 'src' directory.
+To test local changes:
+1. Make your local changes in the `src/` directory.
 1. From your other repo, run `pip install -e <path_to_this_repo>` to use the local version of e-mission-common.
 
-Alternatively, you can use `pip install git+https://github.com/JGreenlee/e-mission-common@master` to test the master branch or any other branch or tag.
+To use a remote branch or tag in your Python project:
+ - Use `pip install git+https://github.com/JGreenlee/e-mission-common@master`
 
-For JavaScript:
+   -OR-
+ 
+ - List `git+https://github.com/JGreenlee/e-mission-common@master` in an `environment.yml`
 
-1. Make your local changes in the 'src' directory.
+
+### For JavaScript:
+
+To test local changes:
+1. Make your local changes in the `src/` directory.
 1. Run `bash bin/compile_to_js.sh` to build the JavaScript.
 1. From this repo, run `npm link` to establish a symlink to your local version of e-mission-common.
 1. From the other repo, run `npm link e-mission-common` to use the symlinked version of this repo.
+
+To use a remote branch or tag in your JavaScript project:
+ - Add `"e-mission-common": "github:JGreenlee/e-mission-common#master"` to your `dependencies` in `package.json`.
 
 ## Unit testing
 
