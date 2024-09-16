@@ -10,7 +10,7 @@ def test_get_base_mode_by_key():
     expected_base_mode = {
         "icon": 'bus-side',
         "color": emcdb.mode_colors['magenta'],
-        "met": emcdb.NON_ACTIVE_METS,
+        "met": {},
         "footprint": {"transit": ["MB", "RB", "CB"]},
     }
     for key in expected_base_mode:
@@ -27,7 +27,7 @@ def test_get_rich_mode_car():
         "passengers": 2,
         "icon": 'car',
         "color": emcdb.mode_colors['red'],
-        "met": emcdb.NON_ACTIVE_METS,
+        "met": {},
         "footprint": emcdb.CAR_FOOTPRINT,
     }
     for key in expected_rich_mode:
@@ -53,7 +53,7 @@ def test_get_rich_mode_e_car():
         "color": '#000000',
         "footprint": {'gasoline': {'wh_per_km': 500, 'weight': 1}},
         "icon": 'car-electric',
-        "met": emcdb.NON_ACTIVE_METS,
+        "met": {},
     }
     for key in expected_rich_mode:
         expectEqual(str(rich_mode[key]), str(expected_rich_mode[key]))

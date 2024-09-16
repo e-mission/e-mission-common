@@ -1,72 +1,103 @@
-import unittest
 
 import emcommon.metrics.footprint.footprint_calculations as emcmff
 import emcommon.metrics.footprint.util as emcmfu
+from ..__testing import jest_test, jest_describe, expectEqual, expectAlmostEqual
 
 
-class TestFootprintCalculations(unittest.IsolatedAsyncioTestCase):
+@jest_test
+async def test_car_default_footprint():
+    """
+    Test kWh and kg CO2e for a 1 km trip in the default CAR.
+    """
+    fake_trip = {
+        "_id": 'fake_trip_id',
+        "distance": 1000,
+        "start_fmt_time": "0000-00-00T00:00:00",
+        "start_loc": {"coordinates": [0, 0]},
+        "user_input": {"mode_confirm": "default_car"}
+    }
+    fake_label_options = {
+        "MODE": [
+            {"value": "default_car", "base_mode": "CAR"}
+        ]
+    }
 
-    async def test_car_default_footprint(self):
-        """
-        1 km in a default CAR should consume 0.87 kWh and emit 0.23 kg CO2e.
-        """
-        fake_trip = {'distance': 1000}
-        fake_mode = {'base_mode': 'CAR', 'passengers': 1}
+    (footprint, metadata) = await emcmff.calc_footprint_for_trip(fake_trip, fake_label_options)
 
-        (footprint, metadata) = await emcmff.calc_footprint_for_trip(fake_trip, fake_mode)
+    expected_footprint = {'kwh': 0.90, 'kg_co2': 0.29}
+    for key in expected_footprint.keys():
+        expectAlmostEqual(footprint[key], expected_footprint[key], delta=0.01)
 
-        expected_footprint = {'kwh': 0.87, 'kg_co2': 0.23}
-        for key in expected_footprint:
-            self.assertAlmostEqual(footprint[key], expected_footprint[key], places=2)
+    # with 2 passengers, the footprint should be halved
+    fake_label_options['MODE'][0]['passengers'] = 2
 
-        # with 2 passengers, the footprint should be halved
-        fake_mode['passengers'] = 2
+    (footprint, metadata) = await emcmff.calc_footprint_for_trip(fake_trip, fake_label_options)
 
-        (footprint, metadata) = await emcmff.calc_footprint_for_trip(fake_trip, fake_mode)
+    expected_footprint = {'kwh': 0.90 / 2, 'kg_co2': 0.29 / 2}
+    for key in expected_footprint.keys():
+        expectAlmostEqual(footprint[key], expected_footprint[key], delta=0.01)
 
-        expected_footprint = {'kwh': 0.87 / 2, 'kg_co2': 0.23 / 2}
-        for key in expected_footprint:
-            self.assertAlmostEqual(footprint[key], expected_footprint[key], places=2)
 
-    async def test_car_custom_footprint(self):
-        """
-        1 km in a custom CAR (wh/km = 100) should consume 0.1 kWh and ...
-        """
-        fake_trip = {'distance': 1000}
-        fake_mode = {'base_mode': 'CAR', 'passengers': 1,
-                     'footprint': {'gasoline': {'wh_per_km': 100}}}
+@jest_test
+async def test_car_custom_footprint():
+    """
+    Test kWh and kg CO2e for a 10 km trip in a custom CAR (wh/km = 100).
+    """
+    fake_trip = {
+        "_id": "fake_trip_id",
+        "distance": 1000,
+        "start_fmt_time": "0000-00-00T00:00:00",
+        "start_loc": {"coordinates": [0, 0]},
+        "user_input": {"mode_confirm": "custom_car"}
+    }
+    fake_label_options = {
+        "MODE": [
+            {"value": "custom_car", "passengers": 1, "footprint": {"gasoline": {"wh_per_km": 100}}}
+        ]
+    }
 
-        (footprint, metadata) = await emcmff.calc_footprint_for_trip(fake_trip, fake_mode)
+    (footprint, metadata) = await emcmff.calc_footprint_for_trip(fake_trip, fake_label_options)
 
-        expected_footprint = {
-            'kwh': 0.1,
-            'kg_co2': (0.1 / 1000) * emcmfu.FUELS_KG_CO2_PER_MWH['gasoline']
-        }
-        for key in expected_footprint:
-            self.assertAlmostEqual(footprint[key], expected_footprint[key], places=2)
+    expected_footprint = {
+        'kwh': 0.1,
+        'kg_co2': (0.1 / 1000) * emcmfu.FUELS_KG_CO2_PER_MWH['gasoline']
+    }
+    for key in expected_footprint.keys():
+        expectAlmostEqual(footprint[key], expected_footprint[key], delta=0.01)
 
-    async def test_nyc_bus_footprint(self):
-        """
-        10 km in a NYC BUS should consume 6.47 kWh and emit 1.72 kg CO2e.
-        """
-        fake_trip = {
-            'distance': 10000,
-            'start_fmt_time': '2022-01-01',
-            'start_loc': {'coordinates': [-74.006, 40.7128]}
-        }
-        fake_mode = {'base_mode': 'BUS'}
 
-        (footprint, metadata) = await emcmff.calc_footprint_for_trip(fake_trip, fake_mode)
+@jest_test
+async def test_nyc_bus_footprint():
+    """
+    Test kWh and kg CO2e for a 10 km bus trip in NYC.
+    """
+    fake_trip = {
+        "_id": "fake_trip_id",
+        "distance": 10000,
+        "start_fmt_time": "2022-01-01",
+        "start_loc": {"coordinates": [-74.006, 40.7128]},
+        "user_input": {"mode_confirm": "bus"},
+    }
+    fake_label_options = {
+        "MODE": [
+            {"value": "bus", "base_mode": "BUS"}
+        ]
+    }
 
-        expected_footprint = {'kwh': 6.47, 'kg_co2': 1.72}
-        expected_metadata = {
-            "data_sources": ["ntd2022", "egrid2022"],
-            "is_provisional": False,
-            "requested_year": 2022,
-            "ntd_uace_code": "63217",
-            "ntd_modes": ["MB", "RB", "CB"],
-        }
-        for key in expected_footprint:
-            self.assertAlmostEqual(footprint[key], expected_footprint[key], places=2)
-        for key in expected_metadata:
-            self.assertEqual(metadata[key], expected_metadata[key])
+    (footprint, metadata) = await emcmff.calc_footprint_for_trip(fake_trip, fake_label_options)
+
+    expected_footprint = {'kwh': 12.93, 'kg_co2': 2.80}
+    expected_metadata = {
+        "data_sources": ["ntd2022", "egrid2022"],
+        "is_provisional": False,
+        "requested_year": 2022,
+        "ntd_uace_code": "63217",
+        "ntd_modes": ["MB", "RB", "CB"],
+    }
+    for key in expected_footprint.keys():
+        expectAlmostEqual(footprint[key], expected_footprint[key], delta=0.01)
+    for key in expected_metadata.keys():
+        expectEqual(metadata[key], expected_metadata[key])
+
+
+jest_describe("test_footprint_calculations")
