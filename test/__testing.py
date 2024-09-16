@@ -8,7 +8,7 @@ def _expect(condition):
 def expectEqual(a, b):
     assert a == b  # __: skip
     '''?
-    expect(a).toBe(b)
+    expect(a).toEqual(b)
     ?'''
 
 
