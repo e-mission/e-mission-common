@@ -71,7 +71,7 @@ async def calc_footprint(mode_footprint, distance, year, coords, uace=None,
     mode_footprint = dict(mode_footprint)
     if 'transit' in mode_footprint:
         (mode_footprint, transit_metadata) = await emcmft.get_transit_intensities(
-            year, coords, uace, mode_footprint['transit'], metadata
+            year, coords, uace, mode_footprint['transit']
         )
         merge_metadatas(metadata, transit_metadata)
     kwh_total = 0
@@ -92,7 +92,7 @@ async def calc_footprint(mode_footprint, distance, year, coords, uace=None,
         elif fuel_type == 'electric':
             # Log.debug('Using eGRID carbon intensity for electric')
             (kg_per_mwh, egrid_metadata) = await emcmfe.get_egrid_intensity(
-                year, coords, egrid_region, metadata
+                year, coords, egrid_region
             )
             merge_metadatas(metadata, egrid_metadata)
             kg_co2 = kwh * kg_per_mwh / 1000
