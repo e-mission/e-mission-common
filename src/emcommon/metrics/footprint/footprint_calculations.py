@@ -44,7 +44,7 @@ async def calc_footprint_for_trip(trip, label_options, mode_value=None, labels_m
         # Log.warn(f"Mode {str(rich_mode)} does not have a footprint."
         #          "Using worst rich mode to determine uncertainty.")
         is_uncertain = True
-        rich_mode = emcmfu.find_worst_rich_mode(label_options)
+        rich_mode = find_worst_rich_mode(label_options)
 
     (footprint, metadata) = await calc_footprint(
         rich_mode['footprint'],
@@ -114,3 +114,31 @@ async def calc_footprint(mode_footprint, distance, year, coords, uace=None,
         'kg_co2': kg_co2_total / passengers,
     }
     return (footprint, metadata)
+
+
+_worst_rich_mode = None
+_worst_wh_per_km = 0
+
+
+def find_worst_rich_mode(label_options):
+    """
+    Given these label options, find the mode option with the highest wh_per_km (any fuel type)
+    Usually this will be taxi/ridehail but could be something else defined by deployers
+    """
+    global _worst_rich_mode, _worst_wh_per_km
+    if _worst_rich_mode is not None:
+        return _worst_rich_mode
+    for opt in label_options['MODE']:
+        rm = emcdb.get_rich_mode(opt)
+        if 'footprint' not in rm or 'transit' in rm['footprint']:
+            continue
+        mode_footprint = dict(rm['footprint'])
+        for fuel_type in mode_footprint.keys():
+            if 'wh_per_km' in rm['footprint'][fuel_type]:
+                wh_per_km = rm['footprint'][fuel_type]['wh_per_km']
+                if wh_per_km > _worst_wh_per_km:
+                    _worst_rich_mode = rm
+                    _worst_wh_per_km = wh_per_km
+    Log.debug(f"Worst rich mode is {str(_worst_rich_mode['value'])} with "
+              f"{str(_worst_wh_per_km)} wh_per_km")
+    return _worst_rich_mode
