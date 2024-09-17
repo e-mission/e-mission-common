@@ -1,14 +1,14 @@
-// Transcrypt'ed from Python, 2024-09-16 11:51:20
+// Transcrypt'ed from Python, 2024-09-17 17:17:16
 import {AssertionError, AttributeError, BaseException, DeprecationWarning, Exception, IndexError, IterableError, KeyError, NotImplementedError, RuntimeWarning, StopIteration, UserWarning, ValueError, Warning, __JsIterator__, __PyIterator__, __Terminal__, __add__, __and__, __call__, __class__, __envir__, __eq__, __floordiv__, __ge__, __get__, __getcm__, __getitem__, __getslice__, __getsm__, __gt__, __i__, __iadd__, __iand__, __idiv__, __ijsmod__, __ilshift__, __imatmul__, __imod__, __imul__, __in__, __init__, __ior__, __ipow__, __irshift__, __isub__, __ixor__, __jsUsePyNext__, __jsmod__, __k__, __kwargtrans__, __le__, __lshift__, __lt__, __matmul__, __mergefields__, __mergekwargtrans__, __mod__, __mul__, __ne__, __neg__, __nest__, __or__, __pow__, __pragma__, __pyUseJsNext__, __rshift__, __setitem__, __setproperty__, __setslice__, __sort__, __specialattrib__, __sub__, __super__, __t__, __terminal__, __truediv__, __withblock__, __xor__, _copy, _sort, abs, all, any, assert, bin, bool, bytearray, bytes, callable, chr, delattr, dict, dir, divmod, enumerate, filter, float, getattr, hasattr, hex, input, int, isinstance, issubclass, len, list, map, max, min, object, oct, ord, pow, print, property, py_TypeError, py_iter, py_metatype, py_next, py_reversed, py_typeof, range, repr, round, set, setattr, sorted, str, sum, tuple, zip} from './org.transcrypt.__runtime__.js';
 import * as emcdu from './emcommon.diary.util.js';
 import * as emcdb from './emcommon.diary.base_modes.js';
-import * as emcfu from './emcommon.metrics.footprint.util.js';
+import * as emcmfu from './emcommon.metrics.footprint.util.js';
 import * as emcmff from './emcommon.metrics.footprint.footprint_calculations.js';
 import * as emcsc from './emcommon.survey.conditional_surveys.js';
 import * as emcble from './emcommon.bluetooth.ble_matching.js';
 import * as util from './emcommon.util.js';
 import * as Log from './emcommon.logger.js';
-export {emcsc, emcdb, emcble, emcmff, emcfu, emcdu, util, Log};
+export {emcmfu, emcble, util, Log, emcdu, emcdb, emcsc, emcmff};
 var __name__ = 'emcommon.metrics.metrics_summaries';
 export var app_config = null;
 export var labels_map = null;
@@ -71,7 +71,7 @@ export var value_of_metric_for_trip = async function (metric_name, grouping_fiel
 		}
 	}
 	else if (metric_name == 'footprint') {
-		var __left0__ = await emcmff.calc_footprint_for_trip (trip, app_config ['label_options'], grouping_val, labels_map);
+		var __left0__ = await emcmff.calc_footprint_for_trip (trip, app_config ['label_options'], 'mode', grouping_val, labels_map);
 		var footprint = __left0__ [0];
 		var metadata = __left0__ [1];
 		footprint.py_update (dict ({'metadata': metadata}));
@@ -97,7 +97,7 @@ export var acc_value_of_metric = function (metric_name, acc, new_val) {
 		new_val = dict (new_val);
 		for (var key of new_val.py_keys ()) {
 			if (key == 'metadata') {
-				emcmff.merge_metadatas (acc ['metadata'], new_val [key]);
+				emcmfu.merge_metadatas (acc ['metadata'], new_val [key]);
 			}
 			else {
 				acc [key] = acc.py_get (key, 0) + new_val [key];

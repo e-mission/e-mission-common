@@ -1,4 +1,4 @@
-// Transcrypt'ed from Python, 2024-09-16 11:51:19
+// Transcrypt'ed from Python, 2024-09-17 17:17:16
 import {AssertionError, AttributeError, BaseException, DeprecationWarning, Exception, IndexError, IterableError, KeyError, NotImplementedError, RuntimeWarning, StopIteration, UserWarning, ValueError, Warning, __JsIterator__, __PyIterator__, __Terminal__, __add__, __and__, __call__, __class__, __envir__, __eq__, __floordiv__, __ge__, __get__, __getcm__, __getitem__, __getslice__, __getsm__, __gt__, __i__, __iadd__, __iand__, __idiv__, __ijsmod__, __ilshift__, __imatmul__, __imod__, __imul__, __in__, __init__, __ior__, __ipow__, __irshift__, __isub__, __ixor__, __jsUsePyNext__, __jsmod__, __k__, __kwargtrans__, __le__, __lshift__, __lt__, __matmul__, __mergefields__, __mergekwargtrans__, __mod__, __mul__, __ne__, __neg__, __nest__, __or__, __pow__, __pragma__, __pyUseJsNext__, __rshift__, __setitem__, __setproperty__, __setslice__, __sort__, __specialattrib__, __sub__, __super__, __t__, __terminal__, __truediv__, __withblock__, __xor__, _copy, _sort, abs, all, any, assert, bin, bool, bytearray, bytes, callable, chr, delattr, dict, dir, divmod, enumerate, filter, float, getattr, hasattr, hex, input, int, isinstance, issubclass, len, list, map, max, min, object, oct, ord, pow, print, property, py_TypeError, py_iter, py_metatype, py_next, py_reversed, py_typeof, range, repr, round, set, setattr, sorted, str, sum, tuple, zip} from './org.transcrypt.__runtime__.js';
 import * as emcmfu from './emcommon.metrics.footprint.util.js';
 import * as emcmft from './emcommon.metrics.footprint.transit.js';
@@ -6,45 +6,12 @@ import * as emcmfe from './emcommon.metrics.footprint.egrid.js';
 import * as emcdu from './emcommon.diary.util.js';
 import * as emcdb from './emcommon.diary.base_modes.js';
 import * as Log from './emcommon.logger.js';
-export {emcdb, emcmfe, emcmft, emcmfu, emcdu, Log};
+export {emcmfu, emcmfe, emcmft, Log, emcdb, emcdu};
 var __name__ = 'emcommon.metrics.footprint.footprint_calculations';
-export var merge_metadatas = function (meta_a, meta_b) {
-	for (var key in meta_b) {
-		var value = meta_b [key];
-		if (!__in__ (key, meta_a)) {
-			meta_a [key] = value;
-		}
-		else if (hasattr (meta_a [key], 'concat')) {
-			meta_a [key] = meta_a [key].concat ((function () {
-				var __accu0__ = [];
-				for (var v of value) {
-					if (!__in__ (v, meta_a [key])) {
-						__accu0__.append (v);
-					}
-				}
-				return __accu0__;
-			}) ());
-		}
-		else if (isinstance (value, list)) {
-			meta_a [key] = meta_a [key] + (function () {
-				var __accu0__ = [];
-				for (var v of value) {
-					if (!__in__ (v, meta_a [key])) {
-						__accu0__.append (v);
-					}
-				}
-				return __accu0__;
-			}) ();
-		}
-		else if (isinstance (value, bool)) {
-			meta_a [key] = meta_a [key] || value;
-		}
-		else {
-			meta_a [key] = value;
-		}
-	}
-};
-export var calc_footprint_for_trip = async function (trip, label_options, mode_value, labels_map) {
+export var calc_footprint_for_trip = async function (trip, label_options, mode_key, mode_value, labels_map) {
+	if (typeof mode_key == 'undefined' || (mode_key != null && mode_key.hasOwnProperty ("__kwargtrans__"))) {;
+		mode_key = 'mode';
+	};
 	if (typeof mode_value == 'undefined' || (mode_value != null && mode_value.hasOwnProperty ("__kwargtrans__"))) {;
 		mode_value = null;
 	};
@@ -52,7 +19,7 @@ export var calc_footprint_for_trip = async function (trip, label_options, mode_v
 		labels_map = null;
 	};
 	trip = dict (trip);
-	mode_value = mode_value || emcdu.label_for_trip (trip, 'mode', labels_map);
+	mode_value = mode_value || emcdu.label_for_trip (trip, mode_key, labels_map);
 	var rich_mode = mode_value && emcdb.get_rich_mode_for_value (mode_value, label_options);
 	var is_uncertain = false;
 	if (rich_mode === null || !__in__ ('footprint', rich_mode)) {
@@ -88,7 +55,7 @@ export var calc_footprint = async function (mode_footprint, distance, year, coor
 		var __left0__ = await emcmft.get_transit_intensities (year, coords, uace, mode_footprint ['transit']);
 		mode_footprint = __left0__ [0];
 		var transit_metadata = __left0__ [1];
-		merge_metadatas (metadata, transit_metadata);
+		emcmfu.merge_metadatas (metadata, transit_metadata);
 	}
 	var kwh_total = 0;
 	var kg_co2_total = 0;
@@ -108,7 +75,7 @@ export var calc_footprint = async function (mode_footprint, distance, year, coor
 			var __left0__ = await emcmfe.get_egrid_intensity (year, coords, egrid_region);
 			var kg_per_mwh = __left0__ [0];
 			var egrid_metadata = __left0__ [1];
-			merge_metadatas (metadata, egrid_metadata);
+			emcmfu.merge_metadatas (metadata, egrid_metadata);
 			var kg_co2 = (kwh * kg_per_mwh) / 1000;
 		}
 		else if (fuel_type != 'overall') {

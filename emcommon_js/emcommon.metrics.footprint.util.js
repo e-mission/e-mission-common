@@ -1,4 +1,4 @@
-// Transcrypt'ed from Python, 2024-09-16 11:51:19
+// Transcrypt'ed from Python, 2024-09-17 17:17:16
 import {AssertionError, AttributeError, BaseException, DeprecationWarning, Exception, IndexError, IterableError, KeyError, NotImplementedError, RuntimeWarning, StopIteration, UserWarning, ValueError, Warning, __JsIterator__, __PyIterator__, __Terminal__, __add__, __and__, __call__, __class__, __envir__, __eq__, __floordiv__, __ge__, __get__, __getcm__, __getitem__, __getslice__, __getsm__, __gt__, __i__, __iadd__, __iand__, __idiv__, __ijsmod__, __ilshift__, __imatmul__, __imod__, __imul__, __in__, __init__, __ior__, __ipow__, __irshift__, __isub__, __ixor__, __jsUsePyNext__, __jsmod__, __k__, __kwargtrans__, __le__, __lshift__, __lt__, __matmul__, __mergefields__, __mergekwargtrans__, __mod__, __mul__, __ne__, __neg__, __nest__, __or__, __pow__, __pragma__, __pyUseJsNext__, __rshift__, __setitem__, __setproperty__, __setslice__, __sort__, __specialattrib__, __sub__, __super__, __t__, __terminal__, __truediv__, __withblock__, __xor__, _copy, _sort, abs, all, any, assert, bin, bool, bytearray, bytes, callable, chr, delattr, dict, dir, divmod, enumerate, filter, float, getattr, hasattr, hex, input, int, isinstance, issubclass, len, list, map, max, min, object, oct, ord, pow, print, property, py_TypeError, py_iter, py_metatype, py_next, py_reversed, py_typeof, range, repr, round, set, setattr, sorted, str, sum, tuple, zip} from './org.transcrypt.__runtime__.js';
 import {fetch_url, read_json_resource} from './emcommon.util.js';
 import * as Log from './emcommon.logger.js';
@@ -139,6 +139,42 @@ export var get_intensities_data = async function (year, dataset) {
 		}
 		Log.error ('eGRID lookup failed for {}.'.format (year));
 		return null;
+	}
+};
+export var merge_metadatas = function (meta_a, meta_b) {
+	for (var key in meta_b) {
+		var value = meta_b [key];
+		if (!__in__ (key, meta_a)) {
+			meta_a [key] = value;
+		}
+		else if (hasattr (meta_a [key], 'concat')) {
+			meta_a [key] = meta_a [key].concat ((function () {
+				var __accu0__ = [];
+				for (var v of value) {
+					if (!__in__ (v, meta_a [key])) {
+						__accu0__.append (v);
+					}
+				}
+				return __accu0__;
+			}) ());
+		}
+		else if (isinstance (value, list)) {
+			meta_a [key] = meta_a [key] + (function () {
+				var __accu0__ = [];
+				for (var v of value) {
+					if (!__in__ (v, meta_a [key])) {
+						__accu0__.append (v);
+					}
+				}
+				return __accu0__;
+			}) ();
+		}
+		else if (isinstance (value, bool)) {
+			meta_a [key] = meta_a [key] || value;
+		}
+		else {
+			meta_a [key] = value;
+		}
 	}
 };
 

@@ -6,13 +6,13 @@ export function acc_value_of_metric(metric_name: any, acc: any, new_val: any): a
 export function get_summary_for_metric(metric: any, confirmed_trips: any): Promise<any[]>;
 export const grouping_field_fns: {};
 export function metric_summary_for_trips(metric: any, confirmed_trips: any): Promise<{}>;
-import * as emcsc from './emcommon.survey.conditional_surveys.js';
-import * as emcdb from './emcommon.diary.base_modes.js';
+import * as emcmfu from './emcommon.metrics.footprint.util.js';
 import * as emcble from './emcommon.bluetooth.ble_matching.js';
-import * as emcmff from './emcommon.metrics.footprint.footprint_calculations.js';
-import * as emcfu from './emcommon.metrics.footprint.util.js';
-import * as emcdu from './emcommon.diary.util.js';
 import * as util from './emcommon.util.js';
 import * as Log from './emcommon.logger.js';
-export { emcsc, emcdb, emcble, emcmff, emcfu, emcdu, util, Log };
+import * as emcdu from './emcommon.diary.util.js';
+import * as emcdb from './emcommon.diary.base_modes.js';
+import * as emcsc from './emcommon.survey.conditional_surveys.js';
+import * as emcmff from './emcommon.metrics.footprint.footprint_calculations.js';
+export { emcmfu, emcble, util, Log, emcdu, emcdb, emcsc, emcmff };
 //# sourceMappingURL=emcommon.metrics.metrics_summaries.d.ts.map

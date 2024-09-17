@@ -30,7 +30,7 @@ export function get_rich_mode_for_value(value: any, label_options: any): any;
 export function get_rich_mode(label_option: any): {};
 export function scale_lightness(hex_color: any, factor: any): any;
 export function dedupe_colors(colors: any, adjustment_range: any): {};
-import { mpge_to_wh_per_km } from './emcommon.metrics.footprint.util.js';
 import * as Log from './emcommon.logger.js';
-export { mpge_to_wh_per_km, Log };
+import { mpge_to_wh_per_km } from './emcommon.metrics.footprint.util.js';
+export { Log, mpge_to_wh_per_km };
 //# sourceMappingURL=emcommon.diary.base_modes.d.ts.map
