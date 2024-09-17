@@ -11,13 +11,13 @@ import emcommon.metrics.footprint.transit as emcmft
 import emcommon.metrics.footprint.util as emcmfu
 
 
-async def calc_footprint_for_trip(trip, label_options, mode_value=None, labels_map=None):
+async def calc_footprint_for_trip(trip, label_options, mode_key='mode', mode_value=None, labels_map=None):
     """
     Calculate the estimated footprint of a trip, which includes 'kwh' and 'kg_co2' fields.
     """
     trip = dict(trip)
     # Log.debug(f"Getting footprint for trip: {str(trip)}")
-    mode_value = mode_value or emcdu.label_for_trip(trip, 'mode', labels_map)
+    mode_value = mode_value or emcdu.label_for_trip(trip, mode_key, labels_map)
     rich_mode = mode_value and emcdb.get_rich_mode_for_value(mode_value, label_options)
     is_uncertain = False
     if rich_mode is None or 'footprint' not in rich_mode:

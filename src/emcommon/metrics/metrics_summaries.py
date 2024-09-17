@@ -73,6 +73,7 @@ async def value_of_metric_for_trip(metric_name: str, grouping_field: str, groupi
     elif metric_name == 'footprint':
         (footprint, metadata) = await emcmff.calc_footprint_for_trip(trip,
                                                                      app_config['label_options'],
+                                                                     'mode',
                                                                      grouping_val,
                                                                      labels_map)
         footprint.update({'metadata': metadata})
