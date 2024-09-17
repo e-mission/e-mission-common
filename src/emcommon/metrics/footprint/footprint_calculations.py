@@ -11,26 +11,6 @@ import emcommon.metrics.footprint.transit as emcmft
 import emcommon.metrics.footprint.util as emcmfu
 
 
-def merge_metadatas(meta_a, meta_b):
-    """
-    Merge two metadata dictionaries, where child lists/arrays are concatenated and booleans are ORed.
-    """
-    # __pragma__('jsiter')
-    for key in meta_b:
-        # __pragma__('nojsiter')
-        value = meta_b[key]
-        if key not in meta_a:
-            meta_a[key] = value
-        elif hasattr(meta_a[key], 'concat'):
-            meta_a[key] = meta_a[key].concat([v for v in value if v not in meta_a[key]])
-        elif isinstance(value, list):
-            meta_a[key] = meta_a[key] + [v for v in value if v not in meta_a[key]]
-        elif isinstance(value, bool):
-            meta_a[key] = meta_a[key] or value
-        else:
-            meta_a[key] = value
-
-
 async def calc_footprint_for_trip(trip, label_options, mode_value=None, labels_map=None):
     """
     Calculate the estimated footprint of a trip, which includes 'kwh' and 'kg_co2' fields.
@@ -73,7 +53,7 @@ async def calc_footprint(mode_footprint, distance, year, coords, uace=None,
         (mode_footprint, transit_metadata) = await emcmft.get_transit_intensities(
             year, coords, uace, mode_footprint['transit']
         )
-        merge_metadatas(metadata, transit_metadata)
+        emcmfu.merge_metadatas(metadata, transit_metadata)
     kwh_total = 0
     kg_co2_total = 0
 
@@ -94,7 +74,7 @@ async def calc_footprint(mode_footprint, distance, year, coords, uace=None,
             (kg_per_mwh, egrid_metadata) = await emcmfe.get_egrid_intensity(
                 year, coords, egrid_region
             )
-            merge_metadatas(metadata, egrid_metadata)
+            emcmfu.merge_metadatas(metadata, egrid_metadata)
             kg_co2 = kwh * kg_per_mwh / 1000
         elif fuel_type != 'overall':
             Log.warn('Unknown fuel type: ' + fuel_type)

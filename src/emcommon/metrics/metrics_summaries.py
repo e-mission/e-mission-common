@@ -5,7 +5,7 @@ import emcommon.util as util
 import emcommon.bluetooth.ble_matching as emcble
 import emcommon.survey.conditional_surveys as emcsc
 import emcommon.metrics.footprint.footprint_calculations as emcmff
-import emcommon.metrics.footprint.util as emcfu
+import emcommon.metrics.footprint.util as emcmfu
 import emcommon.diary.base_modes as emcdb
 import emcommon.diary.util as emcdu
 
@@ -95,7 +95,7 @@ def acc_value_of_metric(metric_name: str, acc, new_val):
         new_val = dict(new_val)
         for key in new_val.keys():
             if key == 'metadata':
-                emcmff.merge_metadatas(acc['metadata'], new_val[key])
+                emcmfu.merge_metadatas(acc['metadata'], new_val[key])
             else:
                 acc[key] = acc.get(key, 0) + new_val[key]
         return acc

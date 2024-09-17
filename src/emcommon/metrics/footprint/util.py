@@ -159,3 +159,23 @@ async def get_intensities_data(year: int, dataset: str) -> dict:
             return await get_intensities_data(year-1, dataset)
         Log.error(f"eGRID lookup failed for {year}.")
         return None
+
+
+def merge_metadatas(meta_a, meta_b):
+    """
+    Merge two metadata dictionaries, where child lists/arrays are concatenated and booleans are ORed.
+    """
+    # __pragma__('jsiter')
+    for key in meta_b:
+        # __pragma__('nojsiter')
+        value = meta_b[key]
+        if key not in meta_a:
+            meta_a[key] = value
+        elif hasattr(meta_a[key], 'concat'):
+            meta_a[key] = meta_a[key].concat([v for v in value if v not in meta_a[key]])
+        elif isinstance(value, list):
+            meta_a[key] = meta_a[key] + [v for v in value if v not in meta_a[key]]
+        elif isinstance(value, bool):
+            meta_a[key] = meta_a[key] or value
+        else:
+            meta_a[key] = value
