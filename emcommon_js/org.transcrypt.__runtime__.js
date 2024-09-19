@@ -1,4 +1,4 @@
-// Transcrypt'ed from Python, 2024-08-27 12:55:26
+// Transcrypt'ed from Python, 2024-09-17 17:17:16
 import {copy as _copy} from './copy.js';
 export {_copy};
 var __name__ = 'org.transcrypt.__runtime__';
@@ -1968,10 +1968,10 @@ export var RuntimeWarning =  __class__ ('RuntimeWarning', [Warning], {
 });
 export var _sort = function (iterable, key, reverse) {
 	if (typeof key == 'undefined' || (key != null && key.hasOwnProperty ("__kwargtrans__"))) {;
-		var key = null;
+		key = null;
 	};
 	if (typeof reverse == 'undefined' || (reverse != null && reverse.hasOwnProperty ("__kwargtrans__"))) {;
-		var reverse = false;
+		reverse = false;
 	};
 	if (arguments.length) {
 		var __ilastarg0__ = arguments.length - 1;
@@ -2089,7 +2089,7 @@ export var map = function (func) {
 };
 export var filter = function (func, iterable) {
 	if (func == null) {
-		var func = bool;
+		func = bool;
 	}
 	return (function () {
 		var __accu0__ = [];

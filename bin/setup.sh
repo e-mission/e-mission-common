@@ -25,3 +25,6 @@ fi
 
 # create the emcommon environment
 conda env update -n emcommon -f bin/environment.yml
+
+# install node packages
+npm i
