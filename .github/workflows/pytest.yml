@@ -39,10 +39,6 @@ jobs:
       with:
         mongodb-version: 4.4.0
 
-    - name: Check existing version of miniconda
-      shell: bash -l {0}
-      run: conda info -a
-
     - uses: conda-incubator/setup-miniconda@v2
       with:
         miniconda-version: "latest"
@@ -51,37 +47,23 @@ jobs:
         auto-update-conda: true
         auto-activate-base: true
 
+    - name: Check existing version of miniconda
+      shell: bash -l {0}
+      run: conda info -a
+
     - name: Install emcommon conda environment
       shell: bash -l {0}
       run: |
         # echo Test
         conda env update -n emcommon -f bin/environment.yml
 
-    - name: Activate the conda environment
-      shell: bash -l {0}
-      run: |
-        conda activate emcommon
-
     - name: Show current conda environment
       shell: bash -l {0}
       run: |
         conda activate emcommon && conda info --envs
 
-    # - name: Setup the emission environment for testing
-    #   shell: bash -l {0}
-    #   run: |
-    #     conda --version
-    #     which conda
-    #     source setup/activate_conda.sh
-    #     conda --version
-    #     source setup/setup_tests.sh
-
-    - name: Switch to emission and run the tests
+    - name: Switch to emcommon and run the tests
       shell: bash -l {0}
       run: |
         conda activate emcommon
         PYTHONPATH=./src pytest test --asyncio-mode=auto
-
-    # - name: Teardown the test environment
-    #   shell: bash -l {0}
-    #   run: source setup/teardown_tests.sh
