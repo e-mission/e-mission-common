@@ -33,7 +33,7 @@ jobs:
     - name: Run setup
       shell: bash -l {0}
       run: |
-        . bin/setup.sh
+        set -x && . bin/setup.sh
 
     - name: Run pytest
       shell: bash -l {0}
