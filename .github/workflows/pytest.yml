@@ -55,7 +55,7 @@ jobs:
       run: |
         conda activate emcommon
         PYTHONPATH=./src pytest test --asyncio-mode=auto
-        
+
   test-jest:
     runs-on: ubuntu-latest
 
@@ -71,4 +71,4 @@ jobs:
       run: npm install
 
     - name: Run jest tests
-      run: npm test
+      run: npm test test
