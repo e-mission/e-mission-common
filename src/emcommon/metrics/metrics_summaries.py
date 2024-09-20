@@ -5,13 +5,12 @@ import emcommon.util as util
 import emcommon.bluetooth.ble_matching as emcble
 import emcommon.survey.conditional_surveys as emcsc
 import emcommon.metrics.footprint.footprint_calculations as emcmff
-import emcommon.metrics.footprint.util as emcfu
+import emcommon.metrics.footprint.util as emcmfu
 import emcommon.diary.base_modes as emcdb
 import emcommon.diary.util as emcdu
 
 app_config = None
 labels_map = None
-label_options = None
 
 # @memoize
 
@@ -21,7 +20,6 @@ async def generate_summaries(
     trips: list,
     _app_config=None,
     _labels_map: dict[str, any] = None,
-    _label_options: dict[str, list[dict]] = None,
 ) -> dict[str, list[dict[str, any]]]:
     """
     :param metric_list: dict of metric names to lists of grouping fields, e.g. { 'distance': ['mode_confirm', 'purpose_confirm'] }
@@ -29,10 +27,9 @@ async def generate_summaries(
     :param _app_config: app_config, or partial app_config with 'survey_info' present
     :param _labels_map: map of trip_ids to unprocessed user input labels
     """
-    global app_config, labels_map, label_options
+    global app_config, labels_map
     app_config = _app_config
     labels_map = _labels_map
-    label_options = _label_options
     # flatten all the incoming trips (if not already flat)
     trips_flat = [
         util.flatten_db_entry(trip) if 'data' in trip else trip
@@ -57,7 +54,7 @@ async def generate_summaries(
 
 
 async def value_of_metric_for_trip(metric_name: str, grouping_field: str, grouping_val: str, trip: dict):
-    global app_config, label_options, labels_map
+    global app_config, labels_map
     if metric_name == 'distance':
         return trip['distance']
     elif metric_name == 'count':
@@ -74,7 +71,11 @@ async def value_of_metric_for_trip(metric_name: str, grouping_field: str, groupi
                 return 'not_responded'
             return 'responded'
     elif metric_name == 'footprint':
-        (footprint, metadata) = await emcmff.calc_footprint_for_trip(trip, label_options, grouping_val, labels_map)
+        (footprint, metadata) = await emcmff.calc_footprint_for_trip(trip,
+                                                                     app_config['label_options'],
+                                                                     'mode',
+                                                                     grouping_val,
+                                                                     labels_map)
         footprint.update({'metadata': metadata})
         return footprint
     return None
@@ -95,7 +96,7 @@ def acc_value_of_metric(metric_name: str, acc, new_val):
         new_val = dict(new_val)
         for key in new_val.keys():
             if key == 'metadata':
-                emcmff.merge_metadatas(acc['metadata'], new_val[key])
+                emcmfu.merge_metadatas(acc['metadata'], new_val[key])
             else:
                 acc[key] = acc.get(key, 0) + new_val[key]
         return acc
@@ -135,6 +136,7 @@ grouping_field_fns = {
     'survey': lambda trip: emcsc.survey_prompted_for_trip(trip, app_config),
     # 'primary_inferred_mode', maybe add later
     'primary_ble_sensed_mode': lambda trip: emcble.primary_ble_sensed_mode_for_trip(trip) or 'UNKNOWN',
+    'mode': lambda trip: emcdu.primary_mode_for_trip(trip, labels_map) or 'UNKNOWN',
 }
 
 

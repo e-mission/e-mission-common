@@ -31,3 +31,34 @@ def survey_answered_for_trip(composite_trip: dict, labels_map=None) -> str | Non
         survey = dict(labels_map[composite_trip['_id']['$oid']]).values()[0]
         return survey['data']['name']
     return None
+
+
+def primary_inferred_mode_for_trip(trip: dict, labels_map=None) -> str:
+    return None  # TODO
+
+
+def primary_sensed_mode_for_trip(trip: dict) -> str:
+    """
+    Get the mode with the greatest distance in the cleaned_section_summary
+    """
+    if 'cleaned_section_summary' not in trip:
+        return None
+    dists = dict(trip['cleaned_section_summary']['distance'])
+    return max(dists, key=dists.get)
+
+
+def primary_mode_for_trip(trip: dict, labels_map=None) -> str:
+    """
+    :param trip: confirmed trip
+    :return: The best mode for the trip, as determined by the following order:
+        - Labeled mode (trip.user_input.mode_confirm)
+        - BLE sensed mode (trip.ble_sensed_summary with greatest distance)
+        - Inferred mode (trip.inferred_labels with greatest confidence)
+        - Sensed mode (trip.cleaned_section_summary with greatest distance)
+        - None
+    """
+    return label_for_trip(trip, 'mode', labels_map) \
+        or emcble.primary_ble_sensed_mode_for_trip(trip) \
+        or primary_inferred_mode_for_trip(trip, labels_map) \
+        or primary_sensed_mode_for_trip(trip) \
+        or None
