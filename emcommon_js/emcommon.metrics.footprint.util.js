@@ -88,29 +88,33 @@ export var get_egrid_region = async function (coords, year) {
 	return null;
 };
 export var get_uace_by_coords = async function (coords, year) {
-	var census_year = year - __mod__ (year, 10);
-	var url = ('https://geocoding.geo.census.gov/geocoder/geographies/coordinates?' + 'x={}&y={}'.format (coords [0], coords [1])) + '&benchmark=Public_AR_Current&vintage=Census{}_Current&layers=87&format=json'.format (census_year);
-	try {
-		var data = await fetch_url (url);
-	}
-	catch (__except0__) {
-		if (isinstance (__except0__, Exception)) {
-			var e = __except0__;
-			Log.error ('Failed to geocode {} in year {}: {}'.format (coords, year, e));
-			return null;
-		}
-		else Log.error ('Failed to geocode {} in year {}'.format (coords, year));
-		return null;
-	}
-	for (var g in data ['result'] ['geographies']) {
-		for (var entry of data ['result'] ['geographies'] [g]) {
-			if (__in__ ('UA', entry)) {
-				return entry ['UA'];
-			}
-		}
-	}
-	Log.warn ('Urban Area not in geocoding response for coords {} in year {}: {}'.format (coords, year, url));
-	return null;
+    var census_year = year - __mod__ (year, 10);
+    var url = ('https://geocoding.geo.census.gov/geocoder/geographies/coordinates?' + 'x={}&y={}'.format (coords [0], coords [1])) + '&benchmark=Public_AR_Current&vintage=Census{}_Current&layers=87&format=json'.format (census_year);
+    try {
+        var data = await fetch_url (url);
+    }
+    catch (__except0__) {
+        if (isinstance (__except0__, Exception)) {
+            var e = __except0__;
+            Log.error ('Failed to geocode {} in year {}: {}'.format (coords, year, e));
+            console.error('Exception:', e);  // Print the exception
+            return null;
+        }
+        else {
+            Log.error ('Failed to geocode {} in year {}'.format (coords, year));
+            console.error('Exception:', __except0__);  // Print the exception
+            return null;
+        }
+    }
+    for (var g in data ['result'] ['geographies']) {
+        for (var entry of data ['result'] ['geographies'] [g]) {
+            if (__in__ ('UA', entry)) {
+                return entry ['UA'];
+            }
+        }
+    }
+    Log.warn ('Urban Area not in geocoding response for coords {} in year {}: {}'.format (coords, year, url));
+    return null;
 };
 export var get_intensities_data = async function (year, dataset) {
 	if (year < 2018) {
