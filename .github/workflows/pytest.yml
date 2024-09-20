@@ -71,4 +71,4 @@ jobs:
       run: npm install
 
     - name: Run jest tests
-      run: npm test test
+      run: npx jest
