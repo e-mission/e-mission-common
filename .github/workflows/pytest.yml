@@ -6,23 +6,11 @@ name: pytest
 # events but only for the master branch
 on:
   push:
-    branches: 
-        - master
-        - pytest
-        - gis-based-mode-detection
   pull_request:
-    branches: 
-        - master
-        - pytest
-        - gis-based-mode-detection
-  schedule:
-    # * is a special character in YAML so you have to quote this string
-    - cron:  '5 4 * * 0'
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
+  test-pytest:
     # The type of runner that the job will run on
     runs-on: ${{ matrix.os }}
     strategy:
@@ -67,3 +55,20 @@ jobs:
       run: |
         conda activate emcommon
         PYTHONPATH=./src pytest test --asyncio-mode=auto
+        
+  test-jest:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Run jest tests
+      run: npm test
