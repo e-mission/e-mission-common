@@ -3,7 +3,6 @@
 name: pytest
 
 # Controls when the action will run. Triggers the workflow on push or pull request
-# events but only for the master branch
 on:
   push:
   pull_request:
@@ -28,7 +27,6 @@ jobs:
         miniconda-version: "latest"
         auto-update-conda: true
         auto-activate-base: true
-
 
     - name: Run setup
       shell: bash -l {0}
