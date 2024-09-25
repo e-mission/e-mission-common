@@ -35,13 +35,14 @@ async def generate_summaries(
         util.flatten_db_entry(trip) if 'data' in trip else trip
         for trip in trips
     ]
-    # only use: a) confirmed_trips, or b) composite_trips that originated from confirmed_trips
-    # (this filters out any composite_trips that originated from confirmed_untrackeds)
-    # we can treat all that remain as confirmed_trips
+    # only use: a) confirmed_trips, or b) composite_trips that originated from *_trip
+    # Allows unprocessed trips from the phone (which have origin_key of UNPROCESSED_trip)
+    # to be included, but filters out any composite_trips that originated from confirmed_untrackeds.
+    # We can treat all that remain as confirmed_trips
     confirmed_trips = [
         trip for trip in trips_flat
         if trip['key'] == 'analysis/confirmed_trip'
-        or trip['origin_key'] == 'analysis/confirmed_trip'
+        or trip['origin_key'].endswith('_trip')
     ]
     # sort trips by start ts
     confirmed_trips.sort(key=lambda trip: trip['start_ts'])
