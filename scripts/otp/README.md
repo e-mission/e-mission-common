@@ -80,3 +80,36 @@ but some years in the data distilling cell skipped years such as 2015.
 
 Navigate to the Jupyter cell prefaced with `# GraphQL Interface` to have
 a Python API for getting transit times.
+
+
+## Cost
+
+### Transit
+
+It is true that GTFS provides fare information.
+However, agencies tend not to provide it. But NTD has all agencies' information.
+
+Fare data for transit is taken from NTD. The average fare for each particular agency
+is calculated for any arbitrary person- take, for instance, Gainesville, Florida.
+Most riders are students who attend the University of Florida, and all of their
+rides are free (this is the same for any faculty and staff).
+
+There are still individuals who pay for fare. So Gainesville's average is $0.07
+according to NTD.
+
+To calculate average fare, use the e-mission-common function:
+
+```python
+# gainesville fl coordinates for the bus (thats why mode is MB)
+# longitude, then latitude.
+# google maps prefers latitude, then longitude.
+# otherwise you will be in antarctica
+intensities = await emcmft.get_transit_intensities(2022, [-82.328132, 29.626142], modes=['MB'])
+
+# Access and print the average_fare
+average_fare = intensities[0]['average_fare']
+print("Average Fare:", average_fare)
+# 0.07352028470412668
+# wow, seven cents! $0.07
+```
+

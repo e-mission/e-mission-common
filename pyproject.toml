@@ -1,6 +1,6 @@
 [project]
 name = "e-mission-common"
-version = "0.6.1"
+version = "0.6.2"
 authors = [
     {name = "Jack Greenlee", email = "jack.greenlee@nrel.gov"},
     {name = "K Shankari", email = "k.shankari@nrel.gov"},

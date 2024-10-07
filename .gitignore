@@ -6,3 +6,6 @@ package-lock.json
 setup/
 miniconda.sh
 test_js*
+shapefile
+*.png
+*.pdf
