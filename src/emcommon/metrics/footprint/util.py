@@ -101,7 +101,10 @@ async def get_egrid_region(coords: list[float, float], year: int) -> str | None:
         return None
     region_feature = get_feature_containing_point(coords, geojson)
     if region_feature is not None:
-        return region_feature['properties']['name']
+        properties = region_feature['properties']
+        region_name = properties.get('name') or properties.get('SUBRGN')
+        if region_name:
+            return region_name
     Log.warn(f"An eGRID region was not found for coords {coords} in year {year}.")
     return None
 
