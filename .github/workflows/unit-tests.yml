@@ -1,6 +1,6 @@
 # taken from https://github.com/e-mission/e-mission-server/blob/master/.github/workflows/test-with-manual-install.yml
 
-name: pytest
+name: unit-tests
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 on:
@@ -11,32 +11,20 @@ on:
 jobs:
   test-pytest:
     # The type of runner that the job will run on
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
+    runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
 
-    - name: Set up Miniconda
-      uses: conda-incubator/setup-miniconda@v3
-      with:
-        miniconda-version: "latest"
-        auto-update-conda: true
-        auto-activate-base: true
-
-    - name: Run setup
+    - name: Run setup.sh
       shell: bash -l {0}
       run: |
-        set -x && . bin/setup.sh
+        source bin/setup.sh
 
     - name: Run pytest
       shell: bash -l {0}
       run: |
-        . bin/run_pytest.sh
+        source bin/run_pytest.sh
 
   test-jest:
     runs-on: ubuntu-latest
@@ -47,10 +35,14 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v2
       with:
-        node-version: '22'
+        node-version: '20'
 
-    - name: Install dependencies
-      run: npm install
+    - name: Run setup.sh
+      shell: bash -l {0}
+      run: |
+        source bin/setup.sh
 
     - name: Run jest tests
-      run: npx jest
+      shell: bash -l {0}
+      run: |
+        source bin/run_jest.sh

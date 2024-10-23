@@ -7,12 +7,12 @@ export function get_summary_for_metric(metric: any, confirmed_trips: any): Promi
 export const grouping_field_fns: {};
 export function metric_summary_for_trips(metric: any, confirmed_trips: any): Promise<{}>;
 import * as emcmfu from './emcommon.metrics.footprint.util.js';
-import * as emcble from './emcommon.bluetooth.ble_matching.js';
-import * as util from './emcommon.util.js';
 import * as Log from './emcommon.logger.js';
-import * as emcdu from './emcommon.diary.util.js';
-import * as emcdb from './emcommon.diary.base_modes.js';
 import * as emcsc from './emcommon.survey.conditional_surveys.js';
+import * as util from './emcommon.util.js';
+import * as emcdu from './emcommon.diary.util.js';
 import * as emcmff from './emcommon.metrics.footprint.footprint_calculations.js';
-export { emcmfu, emcble, util, Log, emcdu, emcdb, emcsc, emcmff };
+import * as emcble from './emcommon.bluetooth.ble_matching.js';
+import * as emcdb from './emcommon.diary.base_modes.js';
+export { emcmfu, Log, emcsc, util, emcdu, emcmff, emcble, emcdb };
 //# sourceMappingURL=emcommon.metrics.metrics_summaries.d.ts.map

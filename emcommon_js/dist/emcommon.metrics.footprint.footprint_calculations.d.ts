@@ -5,9 +5,9 @@ export const _worst_wh_per_km: number;
 export function find_worst_rich_mode(label_options: any): any;
 import * as emcmfu from './emcommon.metrics.footprint.util.js';
 import * as emcmfe from './emcommon.metrics.footprint.egrid.js';
-import * as emcmft from './emcommon.metrics.footprint.transit.js';
 import * as Log from './emcommon.logger.js';
-import * as emcdb from './emcommon.diary.base_modes.js';
+import * as emcmft from './emcommon.metrics.footprint.transit.js';
 import * as emcdu from './emcommon.diary.util.js';
-export { emcmfu, emcmfe, emcmft, Log, emcdb, emcdu };
+import * as emcdb from './emcommon.diary.base_modes.js';
+export { emcmfu, emcmfe, Log, emcmft, emcdu, emcdb };
 //# sourceMappingURL=emcommon.metrics.footprint.footprint_calculations.d.ts.map

@@ -29,7 +29,7 @@ async def test_egrid_intensity_cincinnati_2022():
         "requested_coords": coords,
         "egrid_region": "RFCW",
     }
-    expectAlmostEqual(kg_per_kwh, expected_kg_per_kwh, delta=0.01)
+    expectAlmostEqual(kg_per_kwh, expected_kg_per_kwh, places=2)
     for key in expected_metadata.keys():
         expectEqual(metadata[key], expected_metadata[key])
 
@@ -51,7 +51,7 @@ async def test_egrid_intensity_eagle_point_2023():
         "requested_coords": coords,
         "egrid_region": "NWPP",
     }
-    expectAlmostEqual(kg_per_kwh, expected_kg_per_kwh, delta=0.01)
+    expectAlmostEqual(kg_per_kwh, expected_kg_per_kwh, places=2)
     for key in expected_metadata.keys():
         expectEqual(metadata[key], expected_metadata[key])
 
