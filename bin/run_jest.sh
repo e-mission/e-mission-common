@@ -4,11 +4,16 @@
 
 echo "Running JavaScript tests..."
 
-ROOT_DIR_ABSOLUTE=$(realpath)
+ROOT_DIR_ABSOLUTE=$(realpath .)
 
 # remove any existing test_js_* directories (from previous runs)
 rm -rf $ROOT_DIR_ABSOLUTE/test_js_*
 
+# if shopt is available, enable globstar
+if command -v shopt >/dev/null 2>&1; then
+  shopt -s globstar
+  echo "Enabled globstar in shopt"
+fi
 
 for file in test/**/test_*.py; do
     # if there is a .js file in the same directory, skip
