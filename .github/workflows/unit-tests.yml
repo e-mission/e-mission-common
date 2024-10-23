@@ -1,0 +1,48 @@
+# taken from https://github.com/e-mission/e-mission-server/blob/master/.github/workflows/test-with-manual-install.yml
+
+name: unit-tests
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+on:
+  push:
+  pull_request:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  test-pytest:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Run setup.sh
+      shell: bash -l {0}
+      run: |
+        source bin/setup.sh
+
+    - name: Run pytest
+      shell: bash -l {0}
+      run: |
+        source bin/run_pytest.sh
+
+  test-jest:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '20'
+
+    - name: Run setup.sh
+      shell: bash -l {0}
+      run: |
+        source bin/setup.sh
+
+    - name: Run jest tests
+      shell: bash -l {0}
+      run: |
+        source bin/run_jest.sh
