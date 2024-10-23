@@ -4,7 +4,7 @@
 
 echo "Running JavaScript tests..."
 
-ROOT_DIR_ABSOLUTE=$(realpath)
+ROOT_DIR_ABSOLUTE=$(realpath .)
 
 # remove any existing test_js_* directories (from previous runs)
 rm -rf $ROOT_DIR_ABSOLUTE/test_js_*
