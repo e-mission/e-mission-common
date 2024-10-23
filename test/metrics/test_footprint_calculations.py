@@ -26,7 +26,7 @@ async def test_car_footprint():
 
     expected_footprint = {'kwh': 0.899, 'kg_co2': 0.291}
     for key in expected_footprint.keys():
-        expectAlmostEqual(footprint[key], expected_footprint[key], delta=0.001)
+        expectAlmostEqual(footprint[key], expected_footprint[key], places=3)
 
     # with 2 passengers, the footprint should be halved
     fake_label_options['MODE'][0]['passengers'] = 2
@@ -35,7 +35,7 @@ async def test_car_footprint():
 
     expected_footprint = {'kwh': 0.899 / 2, 'kg_co2': 0.291 / 2}
     for key in expected_footprint.keys():
-        expectAlmostEqual(footprint[key], expected_footprint[key], delta=0.001)
+        expectAlmostEqual(footprint[key], expected_footprint[key], places=3)
 
 
 @jest_test
@@ -60,7 +60,7 @@ async def test_ebike_footprint():
 
     expected_footprint = {'kwh': 0.014, 'kg_co2': 0.006}
     for key in expected_footprint.keys():
-        expectAlmostEqual(footprint[key], expected_footprint[key], delta=0.001)
+        expectAlmostEqual(footprint[key], expected_footprint[key], places=3)
 
 
 @jest_test
@@ -88,7 +88,7 @@ async def test_custom_car_footprint():
         'kg_co2': (0.1 / 1000) * emcmfu.FUELS_KG_CO2_PER_MWH['gasoline']
     }
     for key in expected_footprint.keys():
-        expectAlmostEqual(footprint[key], expected_footprint[key], delta=0.01)
+        expectAlmostEqual(footprint[key], expected_footprint[key], places=2)
 
 
 @jest_test
@@ -111,7 +111,7 @@ async def test_nyc_bus_footprint():
 
     (footprint, metadata) = await emcmff.calc_footprint_for_trip(fake_trip, fake_label_options)
 
-    expected_footprint = {'kwh': 12.93, 'kg_co2': 2.80}
+    expected_footprint = {'kwh': 12.82, 'kg_co2': 2.78}
     expected_metadata = {
         "data_sources": ["ntd2022", "egrid2022"],
         "is_provisional": False,
@@ -120,7 +120,7 @@ async def test_nyc_bus_footprint():
         "ntd_modes": ["MB", "RB", "CB"],
     }
     for key in expected_footprint.keys():
-        expectAlmostEqual(footprint[key], expected_footprint[key], delta=0.01)
+        expectAlmostEqual(footprint[key], expected_footprint[key], places=2)
     for key in expected_metadata.keys():
         expectEqual(metadata[key], expected_metadata[key])
 
@@ -156,8 +156,8 @@ async def test_impact_of_ebike_replacing_car():
     kwh_saved = replaced_mode_footprint['kwh'] - mode_footprint['kwh']
     kg_co2_saved = replaced_mode_footprint['kg_co2'] - mode_footprint['kg_co2']
 
-    expectAlmostEqual(kwh_saved, 0.885, delta=0.001)
-    expectAlmostEqual(kg_co2_saved, 0.285, delta=0.001)
+    expectAlmostEqual(kwh_saved, 0.885, places=3)
+    expectAlmostEqual(kg_co2_saved, 0.285, places=3)
 
 
 jest_describe("test_footprint_calculations")

@@ -8,7 +8,7 @@ This repository uses the [Transcrypt](https://www.transcrypt.org/) library to co
 
 ## Setup
 
-```
+```bash
 . bin/setup.sh
 ```
 
@@ -126,3 +126,7 @@ There may be testing scenarios that must significantly diverge between Python an
 ```bash
 . bin/run_jest.sh
 ```
+
+### GitHub Actions
+
+The unit tests also run via an Actions workflow, which executes both `run_pytest.sh` and `run_jest.sh` on each commit or PR to `master`.

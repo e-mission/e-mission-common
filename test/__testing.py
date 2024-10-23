@@ -12,11 +12,13 @@ def expectEqual(a, b):
     ?'''
 
 
-def expectAlmostEqual(a, b, delta=0.001):
-    assert abs(a - b) < delta  # __: skip
+# __pragma__('kwargs')
+def expectAlmostEqual(a, b, places=3):
+    assert abs(a - b) < (.5 / 10 ** places)  # __: skip
     '''?
-    expect(a).toBeCloseTo(b, delta)
+    expect(a).toBeCloseTo(b, places)
     ?'''
+# __pragma__('nokwargs')
 
 
 def jest_test(test):

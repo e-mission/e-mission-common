@@ -11,9 +11,9 @@ rm -rf e-mission-server
 
 # determine platform 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    TARGET_PLATFORM="linux"
+    TARGET_PLATFORM="Linux-x86_64"
 elif [[ "$OSTYPE" == "darwin"* ]]; then
-    TARGET_PLATFORM="mac"
+    TARGET_PLATFORM="MacOSX-x86_64"
 else
     echo "Unsupported platform $OSTYPE"
     exit 1
