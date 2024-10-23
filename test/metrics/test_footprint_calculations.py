@@ -126,6 +126,38 @@ async def test_nyc_bus_footprint():
 
 
 @jest_test
+async def test_2021_nyc_ebike_footprint():
+    """
+    Test kWh and kg CO2e for a 2021 ebike in NYC.
+    """
+    fake_trip = {
+        "_id": "fake_trip_id",
+        "distance": 1000,
+        "start_fmt_time": "2021-01-01",
+        "start_loc": {"coordinates": [-74.006, 40.7128]},
+        "user_input": {"mode_confirm": "ebike"}
+    }
+    fake_label_options = {
+        "MODE": [
+            {"value": "ebike", "base_mode": "E_BIKE"}
+        ]
+    }
+
+    (footprint, metadata) = await emcmff.calc_footprint_for_trip(fake_trip, fake_label_options)
+
+    expected_footprint = {'kwh': 0.01367, 'kg_co2': 0.005071}
+    expected_metadata = {
+        "data_sources": ["egrid2021"],
+        "is_provisional": False,
+        "requested_year": 2021,
+    }
+    for key in expected_footprint.keys():
+        expectAlmostEqual(footprint[key], expected_footprint[key], places=2)
+    for key in expected_metadata.keys():
+        expectEqual(metadata[key], expected_metadata[key])
+
+
+@jest_test
 async def test_impact_of_ebike_replacing_car():
     """
     Test kWh and kg CO2e saved for a 1 km trip where E_BIKE replaced CAR.
