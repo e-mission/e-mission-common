@@ -8,8 +8,6 @@ This repository uses the [Transcrypt](https://www.transcrypt.org/) library to co
 
 ## Setup
 
-Anaconda is required.
-
 ```bash
 . bin/setup.sh
 ```
@@ -23,7 +21,7 @@ Re-run this if you change the dependencies in `environment.yml` or `package.json
 ## To contribute
 
 1. Make your changes to Python code under the `src` directory.
-1. Run `bash bin/compile_to_js.sh` to build the JavaScript. This will produce output JS files in the `emcommon_js` directory. However, `pip install transcrypt` is required.
+1. Run `bash bin/compile_to_js.sh` to build the JavaScript. This will produce output JS files in the `emcommon_js` directory.
 1. Commit changes from both the `src` and `emcommon_js` directories to your branch.
 
 ## Tips for writing code to work in both Python and JavaScript
@@ -128,3 +126,7 @@ There may be testing scenarios that must significantly diverge between Python an
 ```bash
 . bin/run_jest.sh
 ```
+
+### GitHub Actions
+
+The unit tests also run via an Actions workflow, which executes both `run_pytest.sh` and `run_jest.sh` on each commit or PR to `master`.
