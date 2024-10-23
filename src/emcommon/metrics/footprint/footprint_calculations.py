@@ -31,10 +31,10 @@ async def calc_footprint_for_trip(trip, label_options, mode_key='mode', mode_val
         trip['distance'],
         emcmfu.year_of_trip(trip),
         trip['start_loc']['coordinates'],
-        uace=trip.get('uace_region'),
-        egrid_region=trip.get('egrid_region'),
-        passengers=rich_mode.get('passengers', 1),
-        metadata={'trip_id': trip['_id']}
+        trip.get('uace_region'),
+        trip.get('egrid_region'),
+        rich_mode.get('passengers', 1),
+        {'trip_id': trip['_id']}
     )
     # If is_uncertain, the kwh and kg_co2 values represent the upper bound (worst-case scenario)
     # Mark them as them uncertain, then set the main values to 0 to represent the lower bound.
