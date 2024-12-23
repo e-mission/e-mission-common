@@ -9,3 +9,7 @@ test_js*
 shapefile
 *.png
 *.pdf
+data/
+*chloropleth_map.html
+*.gif
+denver/
