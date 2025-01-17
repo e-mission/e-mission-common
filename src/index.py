@@ -8,6 +8,7 @@ import emcommon.survey.conditional_surveys as conditional_surveys
 import emcommon.bluetooth.ble_matching as ble_matching
 import emcommon.metrics.footprint.footprint_calculations as footprint_calculations
 import emcommon.diary.base_modes as base_modes
+import emcommon.auth.opcode as opcode
 
 
 def dict_to_js_obj(py_dict):
