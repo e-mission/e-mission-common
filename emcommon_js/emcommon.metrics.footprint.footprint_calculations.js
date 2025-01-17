@@ -1,4 +1,4 @@
-// Transcrypt'ed from Python, 2024-10-23 19:03:19
+// Transcrypt'ed from Python, 2025-01-17 16:03:44
 import {AssertionError, AttributeError, BaseException, DeprecationWarning, Exception, IndexError, IterableError, KeyError, NotImplementedError, RuntimeWarning, StopIteration, UserWarning, ValueError, Warning, __JsIterator__, __PyIterator__, __Terminal__, __add__, __and__, __call__, __class__, __envir__, __eq__, __floordiv__, __ge__, __get__, __getcm__, __getitem__, __getslice__, __getsm__, __gt__, __i__, __iadd__, __iand__, __idiv__, __ijsmod__, __ilshift__, __imatmul__, __imod__, __imul__, __in__, __init__, __ior__, __ipow__, __irshift__, __isub__, __ixor__, __jsUsePyNext__, __jsmod__, __k__, __kwargtrans__, __le__, __lshift__, __lt__, __matmul__, __mergefields__, __mergekwargtrans__, __mod__, __mul__, __ne__, __neg__, __nest__, __or__, __pow__, __pragma__, __pyUseJsNext__, __rshift__, __setitem__, __setproperty__, __setslice__, __sort__, __specialattrib__, __sub__, __super__, __t__, __terminal__, __truediv__, __withblock__, __xor__, _copy, _sort, abs, all, any, assert, bin, bool, bytearray, bytes, callable, chr, delattr, dict, dir, divmod, enumerate, filter, float, getattr, hasattr, hex, input, int, isinstance, issubclass, len, list, map, max, min, object, oct, ord, pow, print, property, py_TypeError, py_iter, py_metatype, py_next, py_reversed, py_typeof, range, repr, round, set, setattr, sorted, str, sum, tuple, zip} from './org.transcrypt.__runtime__.js';
 import * as emcmfu from './emcommon.metrics.footprint.util.js';
 import * as emcmft from './emcommon.metrics.footprint.transit.js';
@@ -6,7 +6,7 @@ import * as emcmfe from './emcommon.metrics.footprint.egrid.js';
 import * as emcdu from './emcommon.diary.util.js';
 import * as emcdb from './emcommon.diary.base_modes.js';
 import * as Log from './emcommon.logger.js';
-export {emcdb, emcmfu, Log, emcmfe, emcdu, emcmft};
+export {emcdu, emcmft, emcmfe, emcdb, Log, emcmfu};
 var __name__ = 'emcommon.metrics.footprint.footprint_calculations';
 export var calc_footprint_for_trip = async function (trip, label_options, mode_key, mode_value, labels_map) {
 	if (typeof mode_key == 'undefined' || (mode_key != null && mode_key.hasOwnProperty ("__kwargtrans__"))) {;
