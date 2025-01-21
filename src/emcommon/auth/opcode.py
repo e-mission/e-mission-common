@@ -1,3 +1,4 @@
+from __future__ import annotations  # __: skip
 import secrets  # __: skip
 
 
@@ -25,3 +26,11 @@ def generate_random_string(length: int, charset=None):
         # Python implementation
         random_str += secrets.choice(charset)  # __: skip
     return random_str
+
+
+def generate_opcode(prefix: str, program: str, subgroup: str | None, token_length: int):
+    opcode_parts = [prefix, program]
+    if subgroup:
+        opcode_parts.append(subgroup)
+    opcode_parts.append(generate_random_string(token_length))
+    return '_'.join(opcode_parts)
