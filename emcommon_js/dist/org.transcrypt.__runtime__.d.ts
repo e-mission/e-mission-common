@@ -188,7 +188,7 @@ export namespace set {
     }[];
     export { __bases___5 as __bases__ };
 }
-export function bytearray(bytable: any, encoding: any): Uint8Array;
+export function bytearray(bytable: any, encoding: any): Uint8Array<any>;
 export function str(stringable: any): any;
 export namespace str {
     let __name___6: string;
@@ -292,7 +292,7 @@ export namespace object {
     export function __new__(args: any): any;
 }
 export const abs: (x: number) => number;
-export function bytes(bytable: any, encoding: any): Uint8Array;
+export function bytes(bytable: any, encoding: any): Uint8Array<any>;
 export function pow(a: any, b: any): any;
 export const BaseException: any;
 export const Exception: any;
