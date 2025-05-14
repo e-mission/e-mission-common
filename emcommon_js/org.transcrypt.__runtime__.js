@@ -1,4 +1,4 @@
-// Transcrypt'ed from Python, 2024-10-23 19:03:19
+// Transcrypt'ed from Python, 2025-05-13 19:52:13
 import {copy as _copy} from './copy.js';
 export {_copy};
 var __name__ = 'org.transcrypt.__runtime__';
