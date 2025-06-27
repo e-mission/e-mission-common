@@ -15,8 +15,8 @@ classifiers = [
 license = {text = "BSD-3-Clause"}
 
 [project.urls]
-Homepage = "https://github.com/JGreenlee/e-mission-common#readme"
-Repository = "https://github.com/JGreenlee/e-mission-common.git"
+Homepage = "https://github.com/e-mission/e-mission-common#readme"
+Repository = "https://github.com/e-mission/e-mission-common.git"
 Issues = "https://github.com/e-mission/e-mission-docs/issues"
 
 [build-system]

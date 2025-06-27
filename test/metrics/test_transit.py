@@ -58,7 +58,7 @@ class TestTransitCalculationsFakeData(unittest.IsolatedAsyncioTestCase):
     async def test_get_intensities_fake_data2(self):
         """
         Example scenario from:
-        https://github.com/JGreenlee/e-mission-common/pull/2#issuecomment-2263813540
+        https://github.com/e-mission/e-mission-common/pull/2#issuecomment-2263813540
         """
 
         # Create a fake NTD data file for year 9999 and UACE code "99999"
