@@ -34,12 +34,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JGreenlee/e-mission-common.git"
+    "url": "git+https://github.com/e-mission/e-mission-common.git"
   },
   "author": "Jack Greenlee",
   "license": "BSD-3-Clause",
   "bugs": {
     "url": "https://github.com/e-mission/e-mission-docs/issues"
   },
-  "homepage": "https://github.com/JGreenlee/e-mission-common#readme"
+  "homepage": "https://github.com/e-mission/e-mission-common#readme"
 }

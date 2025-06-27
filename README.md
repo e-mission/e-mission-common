@@ -86,11 +86,11 @@ To test local changes:
 1. From your other repo, run `pip install -e <path_to_this_repo>` to use the local version of e-mission-common.
 
 To use a remote branch or tag in your Python project:
- - Use `pip install git+https://github.com/JGreenlee/e-mission-common@master`
+ - Use `pip install git+https://github.com/e-mission/e-mission-common@master`
 
    -OR-
  
- - List `git+https://github.com/JGreenlee/e-mission-common@master` in an `environment.yml`
+ - List `git+https://github.com/e-mission/e-mission-common@master` in an `environment.yml`
 
 
 ### For JavaScript:
@@ -102,7 +102,7 @@ To test local changes:
 1. From the other repo, run `npm link e-mission-common` to use the symlinked version of this repo.
 
 To use a remote branch or tag in your JavaScript project:
- - Add `"e-mission-common": "github:JGreenlee/e-mission-common#master"` to your `dependencies` in `package.json`.
+ - Add `"e-mission-common": "github:e-mission/e-mission-common#master"` to your `dependencies` in `package.json`.
 
 ## Unit testing
 
