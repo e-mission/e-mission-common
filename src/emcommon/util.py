@@ -60,7 +60,25 @@ async def read_json_resource(filename: str) -> dict:
 
     '''?
     __pragma__('js', '{}', """
-    const r = await import("../src/emcommon/resources/" + filename);
+    const __resourcesMap = {
+      'egrid2018_intensities.json': () => import('../src/emcommon/resources/egrid2018_intensities.json'),
+      'egrid2018_subregions_5pct.json': () => import('../src/emcommon/resources/egrid2018_subregions_5pct.json'),
+      'egrid2019_intensities.json': () => import('../src/emcommon/resources/egrid2019_intensities.json'),
+      'egrid2019_subregions_5pct.json': () => import('../src/emcommon/resources/egrid2019_subregions_5pct.json'),
+      'egrid2020_intensities.json': () => import('../src/emcommon/resources/egrid2020_intensities.json'),
+      'egrid2020_subregions_5pct.json': () => import('../src/emcommon/resources/egrid2020_subregions_5pct.json'),
+      'egrid2021_intensities.json': () => import('../src/emcommon/resources/egrid2021_intensities.json'),
+      'egrid2021_subregions_5pct.json': () => import('../src/emcommon/resources/egrid2021_subregions_5pct.json'),
+      'egrid2022_intensities.json': () => import('../src/emcommon/resources/egrid2022_intensities.json'),
+      'egrid2022_subregions_5pct.json': () => import('../src/emcommon/resources/egrid2022_subregions_5pct.json'),
+      'label-options.default.json': () => import('../src/emcommon/resources/label-options.default.json'),
+      'ntd2018_intensities.json': () => import('../src/emcommon/resources/ntd2018_intensities.json'),
+      'ntd2019_intensities.json': () => import('../src/emcommon/resources/ntd2019_intensities.json'),
+      'ntd2020_intensities.json': () => import('../src/emcommon/resources/ntd2020_intensities.json'),
+      'ntd2021_intensities.json': () => import('../src/emcommon/resources/ntd2021_intensities.json'),
+      'ntd2022_intensities.json': () => import('../src/emcommon/resources/ntd2022_intensities.json')
+    };
+    const r = await __resourcesMap[filename]();
     resources[filename] = r.default;
     return resources[filename];
     """)
