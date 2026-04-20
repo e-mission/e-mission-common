@@ -2,8 +2,8 @@
 name = "e-mission-common"
 version = "0.6.5"
 authors = [
-    {name = "Jack Greenlee", email = "jack.greenlee@nrel.gov"},
-    {name = "K Shankari", email = "k.shankari@nrel.gov"},
+    {name = "Jack Greenlee", email = "jack.greenlee@nlr.gov"},
+    {name = "K Shankari", email = "k.shankari@nlr.gov"},
 ]
 description = "A common library to share code between projects in the e-mission-platform. Written in Python and exposed as both Python and JavaScript."
 readme = "README.md"
