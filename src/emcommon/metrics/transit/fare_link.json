@@ -1,0 +1,239 @@
+{
+    "MTA New York City Transit": {
+        "fare_link": "https://new.mta.info/fares"
+    },
+    "New Jersey Transit Corporation": {
+        "fare_link": "https://www.njtransit.com/fares"
+    },
+    "Washington Metropolitan Area Transit Authority": {
+        "fare_link": "https://www.wmata.com/fares/basic.cfm"
+    },
+    "Los Angeles County Metropolitan Transportation Authority , dba: Metro": {
+        "fare_link": "https://www.metro.net/riding/fares/"
+    },
+    "Chicago Transit Authority": {
+        "fare_link": "https://www.transitchicago.com/fares/"
+    },
+    "King County Department of Metro Transit, dba: King County Metro": {
+        "fare_link": "https://kingcounty.gov/en/dept/metro/fares-and-payment/prices"
+    },
+    "Massachusetts Bay Transportation Authority": {
+        "fare_link": "https://www.mbta.com/fares/bus-fares"
+    },
+    "Southeastern Pennsylvania Transportation Authority": {
+        "fare_link": "https://wwww.septa.org/fares/"
+    },
+    "Maryland Transit Administration": {
+        "fare_link": "https://www.mta.maryland.gov/regular-fares"
+    },
+    "County of Miami-Dade , dba: Transportation & Public Work": {
+        "fare_link": "https://tokentransit.com/agency/miamidadefl"
+    },
+    "Metropolitan Transit Authority of Harris County, Texas": {
+        "fare_link": "https://www.ridemetro.org/fares/all-about-fares"
+    },
+    "Metro-North Commuter Railroad Company, dba: MTA Metro-North Railroad": {
+        "fare_link": "bad"
+    },
+    "MTA Bus Company": {
+        "fare_link": "https://new.mta.info/fares"
+    },
+    "Utah Transit Authority": {
+        "fare_link": "https://m.rideuta.com/Fares-And-Passes/Current-Fares"
+    },
+    "Pace - Suburban Bus Division": {
+        "fare_link": "https://www.pacebus.com/fares"
+    },
+    "Denver Regional Transportation District": {
+        "fare_link": "https://www.rtd-denver.com/fares-passes/fares"
+    },
+    "VIA Metropolitan Transit": {
+        "fare_link": "https://www.viainfo.net/rates/"
+    },
+    "Port Authority of Allegheny County": {
+        "fare_link": "https://www.rideprt.org/fares-and-passes/fare-information/"
+    },
+    "Metropolitan Atlanta Rapid Transit Authority": {
+        "fare_link": "https://itsmarta.com/howtoride.aspx"
+    },
+    "Dallas Area Rapid Transit": {
+        "fare_link": "https://www.dart.org/fare/general-fares-and-overview/fares"
+    },
+    "Tri-County Metropolitan Transportation District of Oregon": {
+        "fare_link": "https://trimet.org/fares/index.htm"
+    },
+    "City and County of San Francisco, dba: San Francisco Municipal Transportation Agency": {
+        "fare_link": "https://www.sfmta.com/getting-around/muni/fares"
+    },
+    "Orange County Transportation Authority": {
+        "fare_link": "https://www.octa.net/getting-around/bus/oc-bus/fares-and-passes/overview/regular-fares/"
+    },
+    "San Diego Metropolitan Transit System": {
+        "fare_link": "https://www.sdmts.com/fares/fare-chart"
+    },
+    "City and County of Honolulu, dba: City & County of Honolulu DTS": {
+        "fare_link": "https://www.thebus.org/Fare/TheBusFares.asp"
+    },
+    "Regional Public Transportation Authority, dba: Valley Metro": {
+        "fare_link": "https://www.valleymetro.org/fares/pricing"
+    },
+    "Metropolitan Council": {
+        "fare_link": "bad"
+    },
+    "Capital Metropolitan Transportation Authority, dba: Capital Metro": {
+        "fare_link": "https://www.capmetro.org/fares-passes"
+    },
+    "Regional Transportation Commission of Southern Nevada": {
+        "fare_link": "https://www.rtcsnv.com/ways-to-travel/fares-passes/"
+    },
+    "Central Florida Regional Transportation Authority": {
+        "fare_link": "https://www.golynx.com/fares-passes/"
+    },
+    "Alameda-Contra Costa Transit District": {
+        "fare_link": "https://www.actransit.org/fares"
+    },
+    "Delaware Transit Corporation": {
+        "fare_link": "https://www.dartfirststate.com/RiderInfo/Fares/"
+    },
+    "Central Pennsylvania Transportation Authority": {
+        "fare_link": "bad"
+    },
+    "Broward County Board of County Commissioners, dba: Broward County Transit Division": {
+        "fare_link": "https://www.broward.org/BCT/Pages/FaresPasses.aspx"
+    },
+    "Metro Transit": {
+        "fare_link": "https://www.metrotransit.org/fares"
+    },
+    "City of Phoenix Public Transit Department , dba: Valley Metro": {
+        "fare_link": "https://www.valleymetro.org/fares/pricing"
+    },
+    "Santa Clara Valley Transportation Authority": {
+        "fare_link": "https://www.vta.org/go/fares"
+    },
+    "Montachusett Regional Transit Authority": {
+        "fare_link": "https://www.mrta.us/fare-passes/"
+    },
+    "Snohomish County Public Transportation Benefit Area Corporation": {
+        "fare_link": "https://www.communitytransit.org/fares-and-passes"
+    },
+    "Bi-State Development Agency of the Missouri-Illinois Metropolitan District, dba: (St. Louis) Metro": {
+        "fare_link": "https://www.metrostlouis.org/fares-and-passes/"
+    },
+    "Regional Transportation Commission of Washoe County": {
+        "fare_link": "https://rtcwashoe.com/public-transportation/fares-passes/"
+    },
+    "Fort Worth Transportation Authority, dba: Trinity Metro": {
+        "fare_link": "https://ridetrinitymetro.org/tickets/"
+    },
+    "Pierce County Transportation Benefit Area Authority": {
+        "fare_link": "https://www.piercetransit.org/PT-fares/"
+    },
+    "The Greater Cleveland Regional Transit Authority": {
+        "fare_link": "https://www.riderta.com/fares"
+    },
+    "Milwaukee County, dba: Milwaukee County Transit System": {
+        "fare_link": "https://www.ridemcts.com/fares"
+    },
+    "Sacramento Regional Transit District, dba: Sacramento RT": {
+        "fare_link": "https://www.sacrt.com/fares/"
+    },
+    "Westchester County, dba: The Bee-Line System": {
+        "fare_link": "https://transportation.westchestergov.com/bee-line/fares-and-metrocard"
+    },
+    "Board of County Commissioners, Palm Beach County, dba: Palm Tran, Inc.": {
+        "fare_link": "https://www.palmtran.org/cash-fare/"
+    },
+    "Transportation District Commission of Hampton Roads, dba: Hampton Roads Transit": {
+        "fare_link": "https://gohrt.com/fares/"
+    },
+    "Capital District Transportation Authority": {
+        "fare_link": "https://www.cdta.org/cdta-fares"
+    },
+    "Southwest Ohio Regional Transit Authority, dba: Metro / Access": {
+        "fare_link": "https://www.go-metro.com/fare-information"
+    },
+    "County of Nassau, dba: Nassau Inter County Express": {
+        "fare_link": "https://www.nicebus.com/Passenger-Information/Fares-Passes"
+    },
+    "San Mateo County Transit District": {
+        "fare_link": "https://www.samtrans.com/fares"
+    },
+    "Foothill Transit": {
+        "fare_link": "https://www.foothilltransit.org/fares-and-passes"
+    },
+    "Transit Authority of River City": {
+        "fare_link": "https://www.ridetarc.org/fare/fare-structure/"
+    },
+    "Niagara Frontier Transportation Authority": {
+        "fare_link": "https://metro.nfta.com/fares/fare-info"
+    },
+    "City of Charlotte North Carolina, dba: Charlotte Area Transit System": {
+        "fare_link": "https://www.charlottenc.gov/CATS/Fares-Passes"
+    },
+    "Rhode Island Public Transit Authority": {
+        "fare_link": "https://www.ripta.com/fares/"
+    },
+    "Fairfax County, VA, dba: Fairfax Connector Bus System": {
+        "fare_link": "https://www.fairfaxcounty.gov/connector/fares-and-policies"
+    },
+    "Spokane Transit Authority": {
+        "fare_link": "https://www.spokanetransit.com/fares-passes/fares-overview/"
+    },
+    "Central Ohio Transit Authority": {
+        "fare_link": "https://www.cota.com/riding-cota/fare-overview/"
+    },
+    "Pinellas Suncoast Transit Authority": {
+        "fare_link": "https://www.psta.net/how-to-ride/tickets-and-fares/"
+    },
+    "Suburban Mobility Authority for Regional Transportation": {
+        "fare_link": "https://www.smartbus.org/Fares"
+    },
+    "Ben Franklin Transit": {
+        "fare_link": "https://www.bft.org/fares/fares-information/"
+    },
+    "City of Tucson": {
+        "fare_link": "https://www.suntran.com/fares-passes/"
+    },
+    "Victor Valley Transit Authority": {
+        "fare_link": "https://vvta.org/fares/"
+    },
+    "Suffolk County , dba: Dept of Public Works - Transportation Division": {
+        "fare_link": "https://sctbus.org/System-Information"
+    },
+    "Mass Transportation Authority": {
+        "fare_link": "https://www.mtaflint.org/fares-passes/"
+    },
+    "Regional Transit Service - Monroe County, dba: RTS Monroe (MB) and RTS Access (DR)": {
+        "fare_link": "https://www.myrts.com/Monroe/Enjoy-the-Ride-Guide/Fares-and-Passes"
+    },
+    "Metropolitan Transit Authority": {
+        "fare_link": "bad"
+    },
+    "Greater Richmond Transit Company": {
+        "fare_link": "https://ridegrtc.com/fares/and-rates/"
+    },
+    "North County Transit District": {
+        "fare_link": "https://gonctd.com/fares/fares-passes/"
+    },
+    "Connecticut Department of Transportation - CTTRANSIT - Hartford Division": {
+        "fare_link": "https://www.cttransit.com/fares"
+    },
+    "Ann Arbor Area Transportation Authority": {
+        "fare_link": "https://www.theride.org/fares-passes/fares"
+    },
+    "Kitsap Transit": {
+        "fare_link": "https://www.kitsaptransit.com/fares/fares"
+    },
+    "Central New York Regional Transportation Authority, dba: New York Regional Transportation Authority": {
+        "fare_link": "https://new.mta.info/fares"
+    },
+    "Pioneer Valley Transit Authority": {
+        "fare_link": "https://www.pvta.com/faresPassesBus.php"
+    },
+    "Jacksonville Transportation Authority": {
+        "fare_link": "https://www.jtafla.com/ride-jta/fares-passes/"
+    },
+    "Blue Water Area Transportation Commission, dba: Blue Water Area Transit": {
+        "fare_link": "https://bwbus.com/fares/"
+    }
+}

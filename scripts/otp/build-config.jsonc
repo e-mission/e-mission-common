@@ -1,0 +1,8 @@
+// build-config.json
+{
+    // Include 5 years of history
+    "transitServiceStart" : "-P5Y",
+    // Include 1 year 6 month and 5 days of scheduled data in the future 
+    // technically this is unnecessary
+    "transitServiceEnd" : "P1Y6M5D"
+}

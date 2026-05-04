@@ -1,0 +1,28 @@
+{
+    "MTA New York City Transit": {
+        "adult": 2.9,
+        "senior": 1.45,
+        "student": 0.0,
+        "age_discount": {
+            "65+": 1.45,
+            "with_adult": 0.0
+        },
+        "pass": {
+            "duration_hours": null,
+            "cost": null
+        },
+        "7_day_pass": 34.0,
+        "30_day_pass": 132.0,
+        "express_bus_pass": {
+            "duration_days": 7,
+            "cost": 64.0
+        },
+        "medicare_medicaid": null,
+        "veterans_active_military": null,
+        "school_free_fare": true,
+        "student_pass": null,
+        "live_fare_link": "https://new.mta.info/fares/subways-and-buses",
+        "notes": "Q70 LaGuardia Link service is fare-free. Fare capping applies for OMNY."
+    },
+    "New Jersey Transit Corporation": "No"
+}

@@ -18,6 +18,14 @@ def weighted_mean(values, weights):
 async def get_transit_intensities(year: int, coords: list[float, float] = None,
                                   uace: str | None = None, modes: list[str] | None = None,
                                   metadata: dict = {}):
+    """
+    Input a list of coordinates, query the census api, and
+    return UACE depending on the year as well.
+
+    If UACE is none, it will get a national average for that year.
+
+    :param coords: longitude is first and then latitude
+    """
     # Log.debug(f"Getting mode footprint in year {year}, coords {coords}, "
     #           f"UACE {uace}, and modes {modes}")
     if uace is None:
@@ -29,9 +37,13 @@ async def get_transit_intensities(year: int, coords: list[float, float] = None,
 async def get_transit_intensities_for_uace(year: int, uace: str | None = None, modes: list[str] | None = None, metadata: dict = {}):
     """
     Returns estimated energy intensities by fuel type across the given modes in the urban area of the given trip.
+
+    Use the get_transit_intensities function instead, if UACE is not available,
+    and instead coordinates are available.
+
     :param trip: The trip to get the data for, e.g. {"year": "2022", "distance": 1000, "start_loc": {"coordinates": [-84.52, 39.13]}}
     :param modes: The NTD modes to get the data for, e.g. ["MB","CB"] (https://www.transit.dot.gov/ntd/national-transit-database-ntd-glossary)
-    :returns: A dictionary of energy intensities by fuel type, with weights, e.g. {"gasoline": { "wh_per_km": 1000, "weight": 0.5 }, "diesel": { "wh_per_km": 2000, "weight": 0.5 }, "overall": { "wh_per_km": 1500, "weight": 1.0 } }
+    :returns: A dictionary of energy intensities, called intensities, by fuel type, with weights, e.g. {"gasoline": { "wh_per_km": 1000, "weight": 0.5 }, "diesel": { "wh_per_km": 2000, "weight": 0.5 }, "overall": { "wh_per_km": 1500, "weight": 1.0 } }
     """
     # Log.debug(f"Getting mode footprint for transit modes {modes} in year {year} and UACE {uace}")
     intensities_data = await util.get_intensities_data(year, 'ntd')
@@ -47,11 +59,16 @@ async def get_transit_intensities_for_uace(year: int, uace: str | None = None, m
     })
 
     total_upt = 0
+    total_fare = 0
+    total_records = 0
     agency_mode_fueltypes = []
     for entry in intensities_data['records']:
         # skip entries that don't match the requested modes or UACE
         if (modes and entry["Mode"] not in modes) or (uace and entry["UACE Code"] != uace):
             continue
+        total_records += 1
+        if 'Average Fare' in entry:
+            total_fare += entry['Average Fare']
         upt = entry['Unlinked Passenger Trips']
         total_upt += upt
         for fuel_type in fuel_types:
@@ -109,6 +126,8 @@ async def get_transit_intensities_for_uace(year: int, uace: str | None = None, m
         "wh_per_km": weighted_mean(wh_per_km_values, weights),
         "weight": sum(weights)
     }
+
+    intensities['average_fare'] = total_fare / total_records if total_records > 0 else None
 
     # Log.info(f"intensities = {intensities}")
     # Log.info(f"metadata = {metadata}"[:500])
